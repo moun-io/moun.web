@@ -14,15 +14,15 @@ li {
   padding: 0rem 0.7rem;
   width: fit-content;
 }
-.📦 {
-  @apply flex m-auto w-[var(--component-width)];
+.Box {
+  @apply px-2 m-auto w-[var(--component-width)];
 }
 header .active {
   @apply text-purple-500;
 }
 
 .⚪️ {
-  @apply lg:w-24 lg:h-10 text-center leading-10 lg:bg-white lg:rounded-[1.25rem] lg:text-neutral-700;
+  @apply cursor-pointer lg:w-24 lg:h-10 Center lg:bg-white lg:rounded-[1.25rem] lg:text-neutral-700;
 }
 .H1 {
   @apply text-3xl font-black;
