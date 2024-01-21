@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <main className="flex min-h-screen flex-col items-center justify-between mt-[4.5rem]">
+        <main className="flex flex-col items-center justify-between mt-[4.5rem]">
           {children}
         </main>
         <Footer />

@@ -15,7 +15,7 @@ li {
   width: fit-content;
 }
 .Box {
-  @apply px-2 m-auto w-[var(--component-width)];
+  @apply w-[var(--component-width)] m-auto;
 }
 header .active {
   @apply text-purple-500;
@@ -35,4 +35,7 @@ header .active {
 }
 .Center {
   @apply flex items-center justify-center;
+}
+.CenterPosition {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }

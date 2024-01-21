@@ -1,56 +1,42 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import BannerImg from "@/public/image/banner1.jpg";
-import Image from "next/image";
-export default function ImageSlider() {
-  const slides = [
-    {
-      key: 0,
-      img: BannerImg,
-      title: "banner1",
-    },
-    {
-      key: 1,
-      img: BannerImg,
-      title: "banner2",
-    },
-    {
-      key: 2,
-      img: BannerImg,
-      title: "banner3",
-    },
-    {
-      key: 3,
-      img: BannerImg,
-      title: "banner4",
-    },
-  ];
+import { useState, useEffect, useRef, useMemo } from "react";
+
+import Image, { StaticImageData } from "next/image";
+export default function ImageSlider({
+  slides,
+}: {
+  slides: {
+    key: number;
+    img: StaticImageData;
+    title: string;
+  }[];
+}) {
   //* ------------ variables ------------//
+
   const [current, setCurrent] = useState(0); //current slide index
-  const slidesRef = useRef(slides); //slides
+  const slidesRef = useRef(slides); //
+  const button = useMemo(() => {
+    return [
+      {
+        id: 1,
+        d: "M15 19l-7-7 7-7",
+        span: "Previous",
+        click: () =>
+          setCurrent((prevState) => (prevState === 0 ? 0 : prevState - 1)),
+      },
+      {
+        id: 2,
+        d: "M9 5l7 7-7 7",
+        span: "Next",
+        click: () =>
+          setCurrent((prevState) =>
+            prevState === slides.length - 1 ? slides.length - 1 : prevState + 1
+          ),
+      },
+    ];
+  }, []);
 
   //* ------------ useEffect ------------//
-  const prevSlider = () => {
-    setCurrent((prevState) => (prevState === 0 ? 0 : prevState - 1));
-  };
-  const nextSlider = () => {
-    setCurrent((prevState) =>
-      prevState === slides.length - 1 ? slides.length - 1 : prevState + 1
-    );
-  };
-  const prevButton = {
-    id: "⬅️",
-    d: "M15 19l-7-7 7-7",
-    span: "Previous",
-    click: prevSlider,
-  };
-  const nextButton = {
-    id: "➡️",
-    d: "M9 5l7 7-7 7",
-    span: "Next",
-    click: nextSlider,
-  };
-  const button = [prevButton, nextButton];
 
   useEffect(() => {
     const interval = setTimeout(() => {
@@ -64,13 +50,13 @@ export default function ImageSlider() {
     return () => {
       clearInterval(interval);
     };
-  }, [current]);
+  }, [current, slides.length]);
 
   //* ------------ return ------------//
   return (
     <div
       id="default-carousel"
-      className="Box h-full relative z-0"
+      className="Box h-full relative"
       data-carousel="static"
     >
       <ol className="flex overflow-hidden">
@@ -93,7 +79,7 @@ export default function ImageSlider() {
         })}
       </ol>
 
-      <div className="flex absolute bottom-5 left-1/2 z-30 space-x-3 -translate-x-1/2">
+      <ol className="flex absolute bottom-5 left-1/2 z-0 space-x-3 -translate-x-1/2">
         {slidesRef.current.map((element, idx) => {
           return (
             <li key={element.key}>
@@ -105,18 +91,18 @@ export default function ImageSlider() {
                 aria-current="false"
                 aria-label={`Slide ${idx}`}
                 data-carousel-slide-to={idx + 1}
+                onClick={() => setCurrent(idx)}
               ></button>
             </li>
           );
         })}
-      </div>
+      </ol>
       {button.map((element, idx) => (
         <button
           key={element.id}
           type="button"
-          id={element.id}
           style={idx === 0 ? { left: "0" } : { right: "0" }}
-          className="flex absolute top-0 z-30 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none"
+          className="flex absolute top-0 z-20 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none"
           data-carousel-next
           onClick={element.click}
         >
