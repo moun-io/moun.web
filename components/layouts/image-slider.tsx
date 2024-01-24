@@ -70,6 +70,7 @@ export default function ImageSlider({
             >
               {element.key}
               <Image
+                priority
                 src={element.img}
                 className={`block object-contain w-full h-full `}
                 alt={element.title}

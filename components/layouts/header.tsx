@@ -2,18 +2,20 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MOUN from "@/public/image/moun.png";
-import Logo from "@/public/image/favicon.svg";
+import LOGO from "@/public/image/favicon.svg";
 import Image from "next/image";
-import { set } from "firebase/database";
+import { auth } from "@/lib/firebase/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
 
 export default function Header() {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const LinkClass = "";
+  const [user, setUser] = useState<User | null>(null);
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const toggle = () => setIsOpened(!isOpened);
 
@@ -31,7 +33,7 @@ export default function Header() {
 
   // * 화면 크기에 따른 NAV open 여부 변경
   useEffect(() => {
-    toggle();
+    isMobile ? setIsOpened(false) : setIsOpened(true);
   }, [isMobile, path]);
 
   //! 화면 크기전환시 NAV가 깜빡이면서 나타나는 문제 해결 , 먼저 invisible 클래스를 추가해놓고 (useEffect가 실행되기 이전에 등록된 css가 visible상태이면 깜빡거렸다가 effect 이후에 invisible 됐어서 훅 적용 기간 딜레이동안 element 가 보였었음), isOpened가 true일때 invisible 클래스를 제거한다.
@@ -46,6 +48,25 @@ export default function Header() {
     }
   }, [isOpened]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        router.replace("/");
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
   return (
     <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
       <div className="Box flex  justify-between items-center">
@@ -63,17 +84,34 @@ export default function Header() {
             </button>
           </div>
           <Link className="Center h-full cursor-pointer flex gap-2" href="/">
-            <Image alt="Logo" priority src={Logo} />
+            <Image alt="Logo" priority src={LOGO} />
             <Image alt="MOUN" priority className="lg:block hidden" src={MOUN} />
           </Link>
         </div>
-
-        <Link
-          href="/login"
-          className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
-        >
-          시작하기
-        </Link>
+        {user ? (
+          <div className="text-white flex gap-4 ">
+            <Link href="/profile">
+              {user.photoURL ? (
+                <Image
+                  className="rounded-full"
+                  src={user.photoURL}
+                  width={33}
+                  height={33}
+                  alt="profile"
+                ></Image>
+              ) : (
+                ""
+              )}
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
+          >
+            시작하기
+          </Link>
+        )}
       </div>
       {/* NAV*/}
       <div
