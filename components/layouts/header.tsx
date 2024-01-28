@@ -4,7 +4,7 @@ import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { usePathname, useRouter } from "next/navigation";
 import MOUN from "@/public/image/moun.png";
-import LOGO from "@/public/image/favicon.svg";
+import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
 import { auth } from "@/lib/firebase/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -50,15 +50,6 @@ export default function Header() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
         router.replace("/");
@@ -69,13 +60,10 @@ export default function Header() {
   }, []);
   return (
     <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
-      <div className="Box flex  justify-between items-center">
-        <div className=" flex">
+      <div className="Box px-4 flex  justify-between items-center">
+        <div className=" flex gap-3">
           <div className="lg:hidden">
-            <button
-              className="flex relative z-50 mx-3 h-full w-5 "
-              onClick={toggle}
-            >
+            <button className="flex relative z-50 h-full w-5 " onClick={toggle}>
               {!isOpened ? (
                 <div className="transition-all w-5 h-0.5 bg-white self-center before:block before:bg-white before:relative before:top-2 before:content-['.'] before:indent-[-9999px] before:w-5 before:h-0.5 after:block after:w-5 after:h-0.5 after:indent-[-9999px] after:bg-white after:content-['.'] after:bottom-2.5 after:relative"></div>
               ) : (
@@ -83,21 +71,21 @@ export default function Header() {
               )}
             </button>
           </div>
-          <Link className="Center h-full cursor-pointer flex gap-2" href="/">
+          <Link className="Center h-full cursor-pointer flex gap-3" href="/">
             <Image alt="Logo" priority src={LOGO} />
             <Image alt="MOUN" priority className="lg:block hidden" src={MOUN} />
           </Link>
         </div>
         {user ? (
           <div className="text-white flex gap-4 ">
-            <Link href="/profile">
+            <Link href="/mypage">
               {user.photoURL ? (
                 <Image
                   className="rounded-full"
                   src={user.photoURL}
                   width={33}
                   height={33}
-                  alt="profile"
+                  alt="my-page"
                 ></Image>
               ) : (
                 ""

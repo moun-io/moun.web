@@ -1,6 +1,6 @@
 "use client";
 import { auth } from "@/lib/firebase/firebase";
-import LogoutImg from "@/public/image/profile/logout.png";
+import LogoutImg from "@/public/image/mypage/logout.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 export default function Logout() {

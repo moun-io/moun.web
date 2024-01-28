@@ -10,10 +10,3 @@ export async function loginWithGoogle() {
   const Credential = await signInWithPopup(auth, provider);
   console.log(Credential);
 }
-export async function signOut() {
-  try {
-    return auth.signOut();
-  } catch (error) {
-    console.error("Error signing out with Google", error);
-  }
-}

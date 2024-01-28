@@ -1,28 +1,12 @@
 import Link from "next/link";
 // import SmallBanner_myPage from "../../components/smallbanner-mypage";
-import history from "@/public/image/profile/history.png";
-import myInfo from "@/public/image/profile/myInfo.png";
-import mySongs from "@/public/image/profile/mySongs.png";
+import history from "@/public/image/mypage/history.png";
+import myInfo from "@/public/image/mypage/myInfo.png";
+import mySongs from "@/public/image/mypage/mySongs.png";
 import UserProfile from "@/public/image/profile/userProfile.png";
 import Image from "next/image";
-import Logout from "@/components/profile/logout";
-function ProfileCard() {
-  return (
-    <div className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
-      <Link href="">
-        <Image src={UserProfile} alt="userProfile" />
-      </Link>
-      <div className="ml-4 flex flex-col justify-between ">
-        <h1 className="text-lg font-medium">가든인더하우스</h1>
-        <Link href="./edit">
-          <div className="Center w-20 h-8 text-xs text-normal rounded-[1.25rem] border border-magenta text-magenta hover:bg-purple-500 hover:text-white hover:border-white transition-colors duration-300">
-            프로필 수정
-          </div>
-        </Link>
-      </div>
-    </div>
-  );
-}
+import Logout from "@/components/mypage/logout";
+import ProfileCard from "@/components/mypage/profile-card";
 
 export default function Profile() {
   const list = [
@@ -44,11 +28,11 @@ export default function Profile() {
   ];
 
   return (
-    <div className="w-screen flex-col">
+    <div className="flex-col w-full">
       <header className="mt-28">
         <ProfileCard />
       </header>
-      <div className="mt-8 w-screen bg-neutral-100/75 h-[40rem]">
+      <div className="mt-8 w-full bg-neutral-100/75 h-[40rem]">
         <div className="w-[min(28rem,100%)] m-auto">
           <ol className="flex flex-col">
             {list.map((item, idx) => {
@@ -84,7 +68,18 @@ export default function Profile() {
             })}
             <Logout />
           </ol>
-          {/* <SmallBanner_myPage /> */}
+          <Link
+            href="/upload"
+            className=" flex items-center justify-between bg-black text-white font-bold w-[min(28rem,100%) px-5 py-4 rounded-xl m-4"
+          >
+            <div>
+              1분 만에 <p className="inline text-green-400"> 내 노래 </p>
+              등록하기
+            </div>
+            <div className="rounded-full bg-neutral-700 p-2 w-10 Center">
+              👉
+            </div>
+          </Link>
         </div>
       </div>
     </div>

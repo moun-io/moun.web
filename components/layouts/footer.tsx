@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="pt-5 pb-32 px-0 w-screen border-t-[0.05rem] border-gray-400 ">
+    <footer className="pt-5 pb-32 px-0 border-t-[0.05rem] border-gray-400 ">
       <div className="Box flex h-40 justify-between  flex-col lg:flex-row lg:items-start">
         <div className="flex w-full content-start flex-row flex-wrap text-xs font-normal text-neutral-700">
           <li className="py-0 px-3">상호명 모은 </li>|
