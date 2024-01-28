@@ -12,7 +12,8 @@ import { onAuthStateChanged, User } from "firebase/auth";
 export default function Header() {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(auth.currentUser);
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -20,6 +21,15 @@ export default function Header() {
   const toggle = () => setIsOpened(!isOpened);
 
   //* ------------ useEffect ------------//
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setAuthLoading(true);
+      setUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // * 화면 크기에 따른  상태 변경 Event Listener
   useEffect(() => {
@@ -48,16 +58,6 @@ export default function Header() {
     }
   }, [isOpened]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        router.replace("/");
-      } else {
-        setUser(null);
-      }
-    });
-  }, []);
   return (
     <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
       <div className="Box px-4 flex  justify-between items-center">
@@ -76,7 +76,10 @@ export default function Header() {
             <Image alt="MOUN" priority className="lg:block hidden" src={MOUN} />
           </Link>
         </div>
-        {user ? (
+        {}
+        {authLoading ? (
+          ""
+        ) : user ? (
           <div className="text-white flex gap-4 ">
             <Link href="/mypage">
               {user.photoURL ? (
@@ -86,6 +89,7 @@ export default function Header() {
                   width={33}
                   height={33}
                   alt="my-page"
+                  priority
                 ></Image>
               ) : (
                 ""
