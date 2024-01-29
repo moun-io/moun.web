@@ -20,12 +20,31 @@ export default function Header() {
 
   const toggle = () => setIsOpened(!isOpened);
 
+  const checkToken = async () => {
+    // console.log("checkToken");
+
+    const token = await auth.currentUser?.getIdToken();
+    // console.log(token);
+
+    const res = await fetch("/api/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    // console.log(res.headers.get);
+  };
   //* ------------ useEffect ------------//
 
+  // * 로그인 상태 변경 Event Listener.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setAuthLoading(true);
       setUser(user);
+
+      checkToken();
+
       setAuthLoading(false);
     });
     return () => unsubscribe();

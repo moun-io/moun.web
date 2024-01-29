@@ -41,10 +41,8 @@ export default function ImageSlider({
   useEffect(() => {
     const interval = setTimeout(() => {
       setCurrent((prevState) => {
-        console.log("prev" + prevState);
         return prevState === slides.length - 1 ? 0 : prevState + 1;
       });
-      console.log("current" + current);
     }, 6000);
 
     return () => {
@@ -114,11 +112,10 @@ export default function ImageSlider({
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              top-0
             >
               <path
-                stroke-linecap="square"
-                stroke-linejoin="square"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
                 // stroke-width={isMobile ? "6" : "4"}
                 d={element.d}
               ></path>
