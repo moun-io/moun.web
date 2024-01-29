@@ -22,10 +22,9 @@ export default function Header() {
 
   const checkToken = async () => {
     // console.log("checkToken");
-
     const token = await auth.currentUser?.getIdToken();
     // console.log(token);
-
+    //? token을 서버로 보내서 유효한지 확인
     const res = await fetch("/api/auth", {
       method: "POST",
       headers: {
@@ -33,6 +32,9 @@ export default function Header() {
       },
       body: JSON.stringify({ token }),
     });
+    if (res.status === 200) return true;
+    else return false;
+
     // console.log(res.headers.get);
   };
   //* ------------ useEffect ------------//
@@ -42,9 +44,7 @@ export default function Header() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setAuthLoading(true);
       setUser(user);
-
       checkToken();
-
       setAuthLoading(false);
     });
     return () => unsubscribe();

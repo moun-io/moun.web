@@ -25,7 +25,7 @@ export default function LoginModal() {
       title: "구글로 로그인하기",
       url: "/",
       logo: GoogleLogo,
-      onLogin: loginWithGoogle,
+      onLogin: onGoogleLogin,
     },
     {
       title: "카카오로 로그인하기",

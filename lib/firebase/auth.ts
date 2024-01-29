@@ -8,5 +8,5 @@ import {
 export async function loginWithGoogle() {
   const provider = new GoogleAuthProvider();
   const Credential = await signInWithPopup(auth, provider);
-  console.log(Credential);
+  // console.log(Credential);
 }
