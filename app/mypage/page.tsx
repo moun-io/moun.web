@@ -3,7 +3,6 @@ import Link from "next/link";
 import history from "@/public/image/mypage/history.png";
 import myInfo from "@/public/image/mypage/myInfo.png";
 import mySongs from "@/public/image/mypage/mySongs.png";
-import UserProfile from "@/public/image/profile/userProfile.png";
 import Image from "next/image";
 import Logout from "@/components/mypage/logout";
 import ProfileCard from "@/components/mypage/profile-card";

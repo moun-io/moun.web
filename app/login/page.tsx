@@ -1,12 +1,9 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginImg from "@/public/image/login-page.png";
 import LoginModal from "@/components/login/loginModal";
 import { twMerge } from "tailwind-merge";
-import { auth } from "@/lib/firebase/client";
-import { redirect } from "next/navigation";
-import { User } from "firebase/auth";
+
 export default function Login() {
   return (
     <div className={twMerge("Box flex flex-col-reverse lg:flex-row h-full")}>

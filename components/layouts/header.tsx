@@ -2,12 +2,12 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import MOUN from "@/public/image/moun.png";
 import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
 import { auth } from "@/lib/firebase/client";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
 
 export default function Header() {
   const [isOpened, setIsOpened] = useState(false);
@@ -16,7 +16,6 @@ export default function Header() {
   const [user, setUser] = useState<User | null>(auth.currentUser);
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   const toggle = () => setIsOpened(!isOpened);
 

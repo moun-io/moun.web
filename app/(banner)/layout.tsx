@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="">
+    <div className="h-full">
       <div className="bg-black">
         <ImageSlider slides={slides} />
       </div>
