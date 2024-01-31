@@ -1,8 +1,5 @@
-"use server";
 import { addDoc, collection } from "firebase/firestore";
-import { db, storage } from "./firebase";
-import { position } from "@chakra-ui/react";
-import { NextResponse } from "next/server";
+import { db, storage } from "./server";
 
 interface Artist {
   name: string;
@@ -12,7 +9,7 @@ interface Artist {
   file: string;
   userId: string;
 }
-export async function updateProfile(formData: FormData) {
+export async function onUpdateProfile(formData: FormData) {
   const data = {
     name: formData.get("name"),
     position: [
@@ -29,7 +26,7 @@ export async function updateProfile(formData: FormData) {
     userId: formData.get("userId"),
   };
   try {
-    await addDoc(collection(db, "artists"), data);
+    // const docRef = await addDoc(collection(db, "artists"), data);
     console.log("Document written with ID: ", data);
   } catch (error) {
     console.log(error);

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import MOUN from "@/public/image/moun.png";
 import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
-import { auth } from "@/lib/firebase/firebase";
+import { auth } from "@/lib/firebase/client";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 export default function Header() {
@@ -31,11 +31,10 @@ export default function Header() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ token }),
+      cache: "no-store",
     });
     if (res.status === 200) return true;
     else return false;
-
-    // console.log(res.headers.get);
   };
   //* ------------ useEffect ------------//
 

@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/lib/firebase/firebase";
+import { auth } from "@/lib/firebase/client";
 import LogoutImg from "@/public/image/mypage/logout.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

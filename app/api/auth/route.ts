@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { auth } from "@/lib/firebase/firebase-admin";
+import { auth } from "@/lib/firebase/server";
 export async function POST(req: NextRequest) {
   const { token } = await req.json();
   console.log(token);

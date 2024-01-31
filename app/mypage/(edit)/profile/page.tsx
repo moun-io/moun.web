@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { updateProfile } from "@/lib/firebase/artists";
-import { updatePassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/firebase";
+
+import { auth } from "@/lib/firebase/client";
+import { onUpdateProfile } from "@/lib/firebase/artists";
+import { set } from "firebase/database";
 function Box({
   children,
   label,
@@ -31,12 +32,18 @@ function Box({
 function TextInput({
   placeholder,
   name,
+  value,
+  onChange,
 }: {
   placeholder: string;
   name: string;
+  value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
     <input
+      onChange={onChange}
+      value={value}
       className="w-full bg-neutral-100 rounded-lg p-4"
       type="text"
       name={name}
@@ -45,10 +52,58 @@ function TextInput({
   );
 }
 export default function Edit() {
-  const Positions = ["Producer", "Vocal", "Rapper", "Engineer", "AnR"];
-  const user = auth.currentUser;
+  const Positions: ["Producer", "Vocal", "Rapper", "Engineer", "AnR"] = [
+    "Producer",
+    "Vocal",
+    "Rapper",
+    "Engineer",
+    "AnR",
+  ];
+  const [user, setUser] = useState(auth.currentUser);
+
+  // //* fetch Data
+  // useEffect(() => {
+  //   if (user) setUser(auth.currentUser);
+  // }, []);
+  // const formData = new FormData();
+
+  // function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault();
+  //   if (user) {
+  //     const target = e.target as typeof e.target & {
+  //       name: { value: string };
+  //       sns: { value: string };
+  //       description: { value: string };
+  //       file: { files: FileList };
+  //       userId: { value: string };
+  //       Producer: { checked: boolean };
+  //       Vocal: { checked: boolean };
+  //       Rapper: { checked: boolean };
+  //       Engineer: { checked: boolean };
+  //       AnR: { checked: boolean };
+  //     };
+  //     console.log(target.Vocal.checked);
+  //     const name = target.name.value;
+  //     const sns = target.sns.value;
+  //     const file = target.file.files[0];
+  //     const userId = target.userId.value;
+  //     let positions: string[] = [];
+  //     Positions.map((element) => {
+  //       if (target[element].checked) {
+  //         positions.push(element);
+  //       }
+  //     });
+  //     updateProfile(user, {
+  //       displayName: name,
+  //     });
+  //   }
+  // }
+
+  // function onChangeName(e: React.ChangeEvent<HTMLInputElement>) {
+  //   setName(e.target.value);
+  // }
   return (
-    <form action={updateProfile} className="flex flex-col gap-4">
+    <form action={onUpdateProfile} className="flex flex-col gap-4">
       <Box label="활동명" required>
         <TextInput placeholder="활동명 입력" name="name" />
       </Box>
@@ -61,7 +116,6 @@ export default function Edit() {
                 type="checkbox"
                 name={element}
                 className="peer hidden"
-                value={element}
               />
               <label
                 htmlFor={element}

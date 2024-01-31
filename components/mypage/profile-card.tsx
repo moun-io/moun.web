@@ -1,10 +1,20 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { auth } from "@/lib/firebase/firebase";
-import { useState } from "react";
+import { auth } from "@/lib/firebase/client";
+import { use, useEffect, useState } from "react";
 export default function ProfileCard() {
-  const [user, setUser] = useState(auth.currentUser);
+  const [user, setUser] = useState(auth?.currentUser);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
 
   return (
     <div className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
