@@ -5,17 +5,25 @@ import { permanentRedirect, redirect } from "next/navigation";
 import { verifyToken } from "@/lib/firebase/verifyToken";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { revalidatePath } from "next/cache";
+import { set } from "firebase/database";
 export interface Artist {
   displayName: string;
   position: string[];
   sns: string;
   description: string;
-  //   file: string;
+
   photoURL?: string;
 
   verified: boolean;
 }
 export async function onUpdateProfile(formData: FormData) {
+  await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("waiting");
+
+      resolve("resolved");
+    }, 2000);
+  });
   const token = cookies().get("__token");
   if (!token) return redirect("/login");
 
@@ -36,7 +44,6 @@ export async function onUpdateProfile(formData: FormData) {
 
       sns: formData.get("sns") as string,
       description: formData.get("description") as string,
-      // file: formData.get("file"),
 
       verified: false,
     };
@@ -51,7 +58,7 @@ export async function onUpdateProfile(formData: FormData) {
       await db
         .collection("artists")
         .doc(decodedToken.uid)
-        .set(data)
+        .update({ ...data })
         .then(() => {
           console.log("Document successfully written! ", data);
         });
