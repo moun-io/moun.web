@@ -1,5 +1,7 @@
-import React from "react";
-
 export default function Artists() {
-  return <div>page</div>;
+  return (
+    <>
+      <h1 className="H1 mt-4">Our Artists</h1>
+    </>
+  );
 }

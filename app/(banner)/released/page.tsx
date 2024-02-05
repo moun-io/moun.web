@@ -1,5 +1,7 @@
-import React from "react";
-
-export default function page() {
-  return <div>released</div>;
+export default function Released() {
+  return (
+    <>
+      <h1 className="H1 mt-4">Released</h1>
+    </>
+  );
 }

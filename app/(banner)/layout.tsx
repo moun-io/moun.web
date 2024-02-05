@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="bg-black">
         <ImageSlider slides={slides} />
       </div>
-      <div className="Box">{children}</div>
+      <div className="Box Center">{children}</div>
     </div>
   );
 }
