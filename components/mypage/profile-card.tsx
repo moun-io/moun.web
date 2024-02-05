@@ -1,19 +1,33 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { auth } from "@/lib/firebase/client";
+import { auth, db } from "@/lib/firebase/client";
 import { useEffect, useState } from "react";
+import { Unsubscribe, collection, doc, onSnapshot } from "firebase/firestore";
+import { Artist } from "@/lib/actions/updateProfile";
+import { User } from "firebase/auth";
 export default function ProfileCard() {
-  const [user, setUser] = useState(auth?.currentUser);
+  const [user, setUser] = useState<Artist | null>(null);
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) return;
+      const unsub = onSnapshot(doc(db, "artists", user?.uid), (doc) => {
+        setUser(doc.data() as Artist);
+      });
+
+      return () => {
+        unsub();
+      };
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
-    console.log("user", user);
+    console.log("user : ", user);
   }, [user]);
 
   return (

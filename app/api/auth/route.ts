@@ -1,3 +1,4 @@
+import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { auth } from "@/lib/firebase/server";
@@ -16,6 +17,7 @@ export async function POST(req: NextRequest) {
         path: "/",
         httpOnly: true,
         sameSite: "lax",
+        // secure: true,
       });
 
       return new Response("auth success");

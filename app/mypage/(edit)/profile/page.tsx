@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { auth } from "@/lib/firebase/client";
-import { onUpdateProfile } from "@/lib/firebase/artists";
+import { onUpdateProfile } from "@/lib/actions/updateProfile";
 import { set } from "firebase/database";
 function Box({
   children,
