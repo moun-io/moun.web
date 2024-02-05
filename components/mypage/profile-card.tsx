@@ -3,9 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth, db } from "@/lib/firebase/client";
 import { useEffect, useState } from "react";
-import { Unsubscribe, collection, doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { Artist } from "@/lib/actions/updateProfile";
-import { User } from "firebase/auth";
 export default function ProfileCard() {
   const [user, setUser] = useState<Artist | null>(null);
 

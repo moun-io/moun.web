@@ -4,7 +4,6 @@ import { twMerge } from "tailwind-merge";
 
 import { auth } from "@/lib/firebase/client";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
-import { set } from "firebase/database";
 import { useFormStatus } from "react-dom";
 function Box({
   children,

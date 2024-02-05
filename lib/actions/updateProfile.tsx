@@ -1,11 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
 import { db, storage, auth } from "../firebase/server";
-import { permanentRedirect, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/firebase/verifyToken";
-import { DecodedIdToken } from "firebase-admin/auth";
-import { revalidatePath } from "next/cache";
-import { set } from "firebase/database";
+
 export interface Artist {
   displayName: string;
   position: string[];
