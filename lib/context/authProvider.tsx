@@ -3,7 +3,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase/client";
 import { User, onAuthStateChanged } from "firebase/auth";
-const AuthContext = createContext();
+const AuthContext = createContext<{
+  user: User | null;
+  setUser: ((user: User | null) => void) | null;
+}>({ user: null, setUser: null });
 
 export default function AuthProvider({
   children,
