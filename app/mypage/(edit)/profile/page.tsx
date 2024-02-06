@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { auth } from "@/lib/firebase/client";
+import { auth, db } from "@/lib/firebase/client";
+import { doc, getDoc } from "firebase/firestore";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
-import { useFormStatus } from "react-dom";
+
 import SubmitButton from "@/components/mypage/submit-button";
-import { Stringifier } from "postcss";
-import { log } from "console";
+
 import Image from "next/image";
 function Box({
   children,
@@ -69,6 +69,13 @@ export default function Edit() {
   const [user, setUser] = useState(auth.currentUser);
 
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    let docRef = doc(db, "artists", user.uid);
+    getDoc(docRef).then((doc) => {
+      if (doc.exists()) setUser(doc.data());
+    });
+  }, [user]);
   return (
     <form action={onUpdateProfile} className="flex flex-col gap-4">
       <Box label="활동명" required>
