@@ -7,19 +7,14 @@ import MOUN from "@/public/image/moun.png";
 import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
 import { auth } from "@/lib/firebase/client";
-import { onAuthStateChanged, type User } from "firebase/auth";
 import { useUser } from "@/lib/context/authProvider";
-import { set } from "firebase/database";
 export default function Header({ children }: { children: React.ReactNode }) {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
-  // console.log("useUser", useUser());
-
   const { user, setUser } = useUser();
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
-
   const toggle = () => setIsOpened(!isOpened);
 
   // const checkToken = async () => {

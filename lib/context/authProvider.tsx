@@ -30,14 +30,12 @@ export default function AuthProvider({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const res = await checkToken();
-        if (res) {
-          setUser(user);
-        } else {
-          setUser(null);
-        }
+      const res = await checkToken();
+      if (res) {
+        //? token이 유효하면
+        setUser(user);
       } else {
+        //? token이 유효하지 않으면 or 로그아웃 시
         setUser(null);
       }
     });

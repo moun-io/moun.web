@@ -69,13 +69,13 @@ export default function Edit() {
   const [user, setUser] = useState(auth.currentUser);
 
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (!user) return;
-    let docRef = doc(db, "artists", user.uid);
-    getDoc(docRef).then((doc) => {
-      if (doc.exists()) setUser(doc.data());
-    });
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const docRef = doc(db, "artists", user.uid);
+  //   getDoc(docRef).then((doc) => {
+  //     if (doc.exists()) setUser(doc.data());
+  //   });
+  // }, [user]);
   return (
     <form action={onUpdateProfile} className="flex flex-col gap-4">
       <Box label="활동명" required>
