@@ -1,28 +1,34 @@
-
-import {auth, config} from "firebase-functions";
-import {initializeApp} from "firebase-admin/app";
-// import { db } from "../../firebase/firebase";
-import {getFirestore} from "firebase-admin/firestore";
+const {auth, config} = require("firebase-functions");
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
 initializeApp(config().firebase);
 
-export const onCreateUser = auth.user().onCreate(async (user) => {
+exports.onCreateUser = auth.user().onCreate(async (user) => {
   console.log(`User created: ${user.uid}`);
 
   await getFirestore().collection("artists").doc(user.uid).set({
-    name: user.displayName,
+    displayName: user.displayName,
     email: user.email,
     photoURL: user.photoURL,
+    createdAt: Date.now(),
   });
   console.log("Item created");
 });
-
-
-export const onUpdateUser = auth.user().onUpdate(async (user) => {
-  console.log(`User updated: ${user.uid}`);
-  await getFirestore().collection("artists").doc(user.uid).update({
-    name: user.displayName,
-    email: user.email,
-    photoURL: user.photoURL,
-  });
-  console.log("Item updated");
+exports.onDeleteUser = auth.user().onDelete(async (user) => {
+  console.log(`User deleted: ${user.uid}`);
+  await getFirestore().collection("artists").doc(user.uid).delete();
+  console.log("Item deleted");
 });
+
+
+// exports.onUpdateUser = auth.user().on(async (user) => {
+//   console.log(`User updated: ${user.uid}`);
+//   await getFirestore().collection("artists").doc(user.uid).update({
+//     name: user.displayName,
+//     email: user.email,
+//     photoURL: user.photoURL,
+//   });
+//   console.log("Item updated");
+// });
+
+

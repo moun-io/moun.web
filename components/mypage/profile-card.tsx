@@ -3,18 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth, db } from "@/lib/firebase/client";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { Artist } from "@/lib/actions/updateProfile";
+import { onAuthStateChanged } from "firebase/auth";
 export default function ProfileCard() {
-  const [user, setUser] = useState<Artist | null>(null);
+  const [user, setUser] = useState<Artist | null>();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) return;
       const unsub = onSnapshot(doc(db, "artists", user?.uid), (doc) => {
         setUser(doc.data() as Artist);
       });
-
       return () => {
         unsub();
       };
@@ -24,10 +24,6 @@ export default function ProfileCard() {
       unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    console.log("user : ", user);
-  }, [user]);
 
   return (
     <div className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
@@ -39,6 +35,7 @@ export default function ProfileCard() {
             height={80}
             className="rounded-full"
             alt="userProfile"
+            priority
           />
         ) : (
           <svg

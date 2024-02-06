@@ -5,6 +5,10 @@ import { twMerge } from "tailwind-merge";
 import { auth } from "@/lib/firebase/client";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
 import { useFormStatus } from "react-dom";
+import SubmitButton from "@/components/mypage/submit-button";
+import { Stringifier } from "postcss";
+import { log } from "console";
+import Image from "next/image";
 function Box({
   children,
   label,
@@ -34,11 +38,13 @@ function TextInput({
   name,
   value,
   onChange,
+  defaultValue,
 }: {
   placeholder: string;
   name: string;
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  defaultValue?: string;
 }) {
   return (
     <input
@@ -48,6 +54,7 @@ function TextInput({
       type="text"
       name={name}
       placeholder={placeholder}
+      defaultValue={defaultValue}
     />
   );
 }
@@ -60,47 +67,8 @@ export default function Edit() {
     "AnR",
   ];
   const [user, setUser] = useState(auth.currentUser);
-  // //* fetch Data
-  // useEffect(() => {
-  //   if (user) setUser(auth.currentUser);
-  // }, []);
-  // const formData = new FormData();
 
-  // function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault();
-  //   if (user) {
-  //     const target = e.target as typeof e.target & {
-  //       name: { value: string };
-  //       sns: { value: string };
-  //       description: { value: string };
-  //       file: { files: FileList };
-  //       userId: { value: string };
-  //       Producer: { checked: boolean };
-  //       Vocal: { checked: boolean };
-  //       Rapper: { checked: boolean };
-  //       Engineer: { checked: boolean };
-  //       AnR: { checked: boolean };
-  //     };
-  //     console.log(target.Vocal.checked);
-  //     const name = target.name.value;
-  //     const sns = target.sns.value;
-  //     const file = target.file.files[0];
-  //     const userId = target.userId.value;
-  //     let positions: string[] = [];
-  //     Positions.map((element) => {
-  //       if (target[element].checked) {
-  //         positions.push(element);
-  //       }
-  //     });
-  //     updateProfile(user, {
-  //       displayName: name,
-  //     });
-  //   }
-  // }
-
-  // function onChangeName(e: React.ChangeEvent<HTMLInputElement>) {
-  //   setName(e.target.value);
-  // }
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
   return (
     <form action={onUpdateProfile} className="flex flex-col gap-4">
       <Box label="활동명" required>
@@ -148,52 +116,74 @@ export default function Edit() {
       >
         <div className="Center text-neutral-600">
           <label
-            htmlFor="file"
+            htmlFor="photo"
             className=" Center flex-col  gap-4 bg-neutral-100 size-80 rounded-full cursor-pointer"
           >
-            <div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                />
-              </svg>
-            </div>
-            720px 이상의 PNG / JPG 파일을 올려주세요
+            {fileUrl ? (
+              <Image
+                src={fileUrl}
+                alt="profile"
+                height={100}
+                width={100}
+                className="w-80 h-80 rounded-full"
+              />
+            ) : (
+              <>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                    />
+                  </svg>
+                </div>
+                <p> 720px 이상의 PNG / JPG 파일을 올려주세요</p>
+              </>
+            )}
           </label>
-          <input id="file" name="file" type="file" hidden />
+          <input
+            id="photo"
+            name="photo"
+            type="file"
+            hidden
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                if (e.target.files[0].size > 1000000) {
+                  alert(
+                    "파일 사이즈가 너무 큽니다. 10MB 이하의 파일을 올려주세요."
+                  );
+                  return;
+                }
+                const reader = new FileReader();
+                const file = e.target.files[0];
+                if (file) {
+                  console.log(file);
+                  reader.onload = (readEvent) => {
+                    if (
+                      readEvent.target != null &&
+                      typeof readEvent.target.result === "string"
+                    ) {
+                      setFileUrl(readEvent.target.result);
+                      console.log(readEvent.target.result);
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }
+            }}
+          />
         </div>
       </Box>
       {user && <input hidden type="text" name="userId" value={user?.uid} />}
       <SubmitButton />
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <>
-      {pending ? (
-        <div className="Center rounded-xl text-neutral-500 bg-neutral-300 p-4">
-          Loading...
-        </div>
-      ) : (
-        <button
-          type="submit"
-          className="rounded-xl text-neutral-500 bg-neutral-300 p-4 hover:bg-purple-500 hover:text-white transition"
-        >
-          Confirm
-        </button>
-      )}
-    </>
   );
 }

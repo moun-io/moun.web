@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/mypage") {
+  if (request.nextUrl.pathname.includes("/mypage")) {
     if (cookies().has("__token")) {
       return NextResponse.next();
     } else {

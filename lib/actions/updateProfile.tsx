@@ -1,8 +1,11 @@
 "use server";
 import { cookies } from "next/headers";
-import { db, storage, auth } from "../firebase/server";
+import { db, storage } from "../firebase/server";
 import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/firebase/verifyToken";
+import { ref, uploadBytes } from "firebase/storage";
+import { log } from "firebase-functions/logger";
+import { getDownloadURL } from "firebase-admin/storage";
 
 export interface Artist {
   displayName: string;
@@ -10,26 +13,49 @@ export interface Artist {
   sns: string;
   description: string;
 
-  photoURL?: string;
-
-  verified: boolean;
+  photoURL?: string | null;
 }
 export async function onUpdateProfile(formData: FormData) {
-  await new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log("waiting");
+  // await new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     console.log("waiting");
 
-      resolve("resolved");
-    }, 2000);
-  });
+  //     resolve("resolved");
+  //   }, 2000);
+  // });
+
   const token = cookies().get("__token");
   if (!token) return redirect("/login");
-
   const decodedToken = await verifyToken(token.value);
   if (!decodedToken) return redirect("/login");
 
   //? 유저가 작성한 프로필인지 확인
   if (formData.get("userId") === decodedToken.uid) {
+    const file = formData.get("photo") as File;
+    let photoURL: string = "";
+    console.log("formData", formData.get("photo"));
+
+    const buffer = await file.arrayBuffer();
+    console.log(buffer);
+
+    if (file && file.size < 10000000 && file.type.includes("image")) {
+      try {
+        const fileRef = await storage
+          .bucket("moun-df9ff.appspot.com")
+          .file(`avatars/${decodedToken.uid}`);
+        console.log("fileRef", fileRef);
+        await fileRef.save(Buffer.from(buffer), {
+          contentType: file.type,
+          metadata: {
+            cacheControl: "public, max-age=31536000",
+          },
+        });
+        photoURL = await getDownloadURL(fileRef);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     const data: Artist = {
       displayName: formData.get("name") as string,
       position: [
@@ -42,9 +68,9 @@ export async function onUpdateProfile(formData: FormData) {
 
       sns: formData.get("sns") as string,
       description: formData.get("description") as string,
-
-      verified: false,
+      ...(photoURL && { photoURL: photoURL }),
     };
+
     if (
       data.displayName === null ||
       data.position.length === 0 ||
