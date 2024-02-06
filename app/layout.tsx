@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/layouts/footer";
 import Header from "@/components/layouts/header";
+import AuthProvider from "@/lib/context/authProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,9 +19,12 @@ export default async function RootLayout({
   return (
     <html lang="kr">
       <body>
-        <Header />
-        <main className="Center flex-col mt-[4.5rem]">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header>
+            <main className="Center flex-col mt-[4.5rem]">{children}</main>
+          </Header>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

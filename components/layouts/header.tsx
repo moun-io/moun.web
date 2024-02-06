@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { usePathname } from "next/navigation";
@@ -8,45 +8,48 @@ import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
 import { auth } from "@/lib/firebase/client";
 import { onAuthStateChanged, type User } from "firebase/auth";
-
-export default function Header() {
+import { useUser } from "@/lib/context/authProvider";
+import { set } from "firebase/database";
+export default function Header({ children }: { children: React.ReactNode }) {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [authLoading, setAuthLoading] = useState(false);
+  // console.log("useUser", useUser());
+
+  const { user, setUser } = useUser();
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
 
   const toggle = () => setIsOpened(!isOpened);
 
-  const checkToken = async () => {
-    // console.log("checkToken");
-    const token = await auth.currentUser?.getIdToken();
-    // console.log(token);
-    //? token을 서버로 보내서 유효한지 확인
-    const res = await fetch("/api/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-      cache: "no-store",
-    });
-    if (res.status === 200) return true;
-    else return false;
-  };
-  //* ------------ useEffect ------------//
+  // const checkToken = async () => {
+  //   // console.log("checkToken");
+  //   const token = await user?.getIdToken();
+  //   // console.log(token);
+  //   //? token을 서버로 보내서 유효한지 확인
+  //   const res = await fetch("/api/auth", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ token }),
+  //     cache: "no-store",
+  //   });
+  //   if (res.status === 200) return true;
+  //   else return false;
+  // };
+  // //* ------------ useEffect ------------//
 
-  // * 로그인 상태 변경 Event Listener.
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setAuthLoading(true);
-      setUser(user);
-      checkToken();
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  // // * 로그인 상태 변경 Event Listener.
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     setAuthLoading(true);
+  //     setUser(user);
+  //     checkToken();
+  //     setAuthLoading(false);
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   // * 화면 크기에 따른  상태 변경 Event Listener
   useEffect(() => {
@@ -76,97 +79,108 @@ export default function Header() {
   }, [isOpened]);
 
   return (
-    <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
-      <div className="Box px-4 flex  justify-between items-center">
-        <div className=" flex gap-3">
-          <div className="lg:hidden">
-            <button className="flex relative z-50 h-full w-5 " onClick={toggle}>
-              {!isOpened ? (
-                <div className="transition-all w-5 h-0.5 bg-white self-center before:block before:bg-white before:relative before:top-2 before:content-['.'] before:indent-[-9999px] before:w-5 before:h-0.5 after:block after:w-5 after:h-0.5 after:indent-[-9999px] after:bg-white after:content-['.'] after:bottom-2.5 after:relative"></div>
-              ) : (
-                <div className="transition-all self-center bg-white w-5 h-0.5 rotate-45 before:block before:bg-white before:w-5 before:h-0.5 before:rotate-90"></div>
-              )}
-            </button>
-          </div>
-          <Link className="Center h-full cursor-pointer flex gap-3" href="/">
-            <Image alt="Logo" priority src={LOGO} />
-            <Image alt="MOUN" priority className="lg:block hidden" src={MOUN} />
-          </Link>
-        </div>
-        {}
-        {authLoading ? (
-          ""
-        ) : user ? (
-          <div className="text-white flex gap-4 ">
-            <Link href="/mypage">
-              {user.photoURL ? (
-                <Image
-                  className="rounded-full"
-                  src={user.photoURL}
-                  width={33}
-                  height={33}
-                  alt="my-page"
-                  priority
-                ></Image>
-              ) : (
-                ""
-              )}
+    <>
+      <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
+        <div className="Box px-4 flex  justify-between items-center">
+          <div className=" flex gap-3">
+            <div className="lg:hidden">
+              <button
+                className="flex relative z-50 h-full w-5 "
+                onClick={toggle}
+              >
+                {!isOpened ? (
+                  <div className="transition-all w-5 h-0.5 bg-white self-center before:block before:bg-white before:relative before:top-2 before:content-['.'] before:indent-[-9999px] before:w-5 before:h-0.5 after:block after:w-5 after:h-0.5 after:indent-[-9999px] after:bg-white after:content-['.'] after:bottom-2.5 after:relative"></div>
+                ) : (
+                  <div className="transition-all self-center bg-white w-5 h-0.5 rotate-45 before:block before:bg-white before:w-5 before:h-0.5 before:rotate-90"></div>
+                )}
+              </button>
+            </div>
+            <Link className="Center h-full cursor-pointer flex gap-3" href="/">
+              <Image alt="Logo" priority src={LOGO} />
+              <Image
+                alt="MOUN"
+                priority
+                className="lg:block hidden"
+                src={MOUN}
+              />
             </Link>
           </div>
-        ) : (
-          <Link
-            href="/login"
-            className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
-          >
-            시작하기
-          </Link>
-        )}
-      </div>
-      {/* NAV*/}
-      <div
-        ref={navRef}
-        className="absolute transition hidden pointer-events-none w-screen h-screen lg:flex text-white  bg-neutral-900/60 lg:bg-transparent lg:h-[4.5rem] text-base"
-      >
-        <div className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0">
-          <Link
-            className={twMerge(
-              "lg:hidden",
-              "transition hover:text-purple-600 pointer-events-auto",
-              path === "/" && "text-purple-400"
-            )}
-            href="/"
-          >
-            Home
-          </Link>
-          <Link
-            className={twMerge(
-              "transition hover:text-purple-600 pointer-events-auto",
-              path === "/songs" && "text-purple-400"
-            )}
-            href="/songs"
-          >
-            Songs
-          </Link>
-          <Link
-            className={twMerge(
-              "transition hover:text-purple-600 pointer-events-auto",
-              path === "/artists" && "text-purple-400"
-            )}
-            href="/artists"
-          >
-            Artists
-          </Link>
-          <Link
-            className={twMerge(
-              "transition hover:text-purple-600 pointer-events-auto",
-              path === "/released" && "text-purple-400"
-            )}
-            href="released"
-          >
-            Released
-          </Link>
+          {}
+          {authLoading ? (
+            ""
+          ) : user ? (
+            <div className="text-white flex gap-4 ">
+              <Link href="/mypage">
+                {user.photoURL ? (
+                  <Image
+                    className="rounded-full"
+                    src={user.photoURL}
+                    width={33}
+                    height={33}
+                    alt="my-page"
+                    priority
+                  ></Image>
+                ) : (
+                  ""
+                )}
+              </Link>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
+            >
+              시작하기
+            </Link>
+          )}
         </div>
-      </div>
-    </header>
+        {/* NAV*/}
+        <div
+          ref={navRef}
+          className="absolute transition hidden pointer-events-none w-screen h-screen lg:flex text-white  bg-neutral-900/60 lg:bg-transparent lg:h-[4.5rem] text-base"
+        >
+          <div className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0">
+            <Link
+              className={twMerge(
+                "lg:hidden",
+                "transition hover:text-purple-600 pointer-events-auto",
+                path === "/" && "text-purple-400"
+              )}
+              href="/"
+            >
+              Home
+            </Link>
+            <Link
+              className={twMerge(
+                "transition hover:text-purple-600 pointer-events-auto",
+                path === "/songs" && "text-purple-400"
+              )}
+              href="/songs"
+            >
+              Songs
+            </Link>
+            <Link
+              className={twMerge(
+                "transition hover:text-purple-600 pointer-events-auto",
+                path === "/artists" && "text-purple-400"
+              )}
+              href="/artists"
+            >
+              Artists
+            </Link>
+            <Link
+              className={twMerge(
+                "transition hover:text-purple-600 pointer-events-auto",
+                path === "/released" && "text-purple-400"
+              )}
+              href="released"
+            >
+              Released
+            </Link>
+          </div>
+        </div>
+      </header>
+      {children}
+    </>
   );
 }
