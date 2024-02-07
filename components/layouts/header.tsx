@@ -7,11 +7,13 @@ import MOUN from "@/public/image/moun.png";
 import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
 import { useArtist } from "@/lib/context/artistProvider";
+import { useUser } from "@/lib/context/authProvider";
 export default function Header({ children }: { children: React.ReactNode }) {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const { artist } = useArtist();
+  const { user } = useUser();
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
   const toggle = () => setIsOpened(!isOpened);
@@ -70,32 +72,46 @@ export default function Header({ children }: { children: React.ReactNode }) {
               />
             </Link>
           </div>
-
-          {artist ? (
-            <div className="text-white flex gap-4 ">
-              <Link href="/mypage">
-                {artist.photoURL ? (
-                  <Image
-                    className="rounded-full"
-                    src={artist.photoURL}
-                    width={33}
-                    height={33}
-                    alt="my-page"
-                    priority
-                  ></Image>
-                ) : (
-                  ""
-                )}
+          {
+            // * 로그인 상태일때
+            user ? (
+              <div className="text-white flex gap-4">
+                <Link href="/mypage">
+                  {artist?.photoURL ? (
+                    <Image
+                      className="rounded-full aspect-square size-9"
+                      src={artist.photoURL}
+                      width={33}
+                      height={33}
+                      alt="my-page"
+                      priority
+                    ></Image>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="white"
+                      className="size-9"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </Link>
+              </div>
+            ) : (
+              // * 로그인 상태가 아닐때
+              <Link
+                href="/login"
+                className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
+              >
+                시작하기
               </Link>
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className="text-sm ⚪️ bg-transparent text-white px-4 pointer-events-auto"
-            >
-              시작하기
-            </Link>
-          )}
+            )
+          }
         </div>
         {/* NAV*/}
         <div

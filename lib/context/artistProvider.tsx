@@ -11,9 +11,10 @@ import {
 } from "react";
 import { db, auth } from "@/lib/firebase/client";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
+import { Unsubscribe, doc, onSnapshot } from "firebase/firestore";
 import { log } from "console";
 import { useUser } from "./authProvider";
+import { set } from "firebase/database";
 
 export interface Artist {
   displayName: string;
@@ -36,14 +37,17 @@ export default function ArtistProvider({
   const [artist, setArtist] = useState<Artist | null>(null);
 
   useEffect(() => {
-    if (!user) return;
-    const unsub = onSnapshot(doc(db, "artists", user.uid), (doc) => {
-      console.log(doc.data());
-      if (doc.exists()) {
-        setArtist(doc.data() as Artist);
-      }
-    });
-    return () => unsub();
+    if (!user) {
+      setArtist(null);
+    } else {
+      const unsub = onSnapshot(doc(db, "artists", user.uid), (doc) => {
+        console.log(doc.data());
+        if (doc.exists()) {
+          setArtist(doc.data() as Artist);
+        }
+      });
+      return () => unsub();
+    }
   }, [user]);
 
   return (
