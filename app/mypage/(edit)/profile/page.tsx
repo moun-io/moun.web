@@ -163,7 +163,7 @@ export default function Edit() {
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
-                if (e.target.files[0].size > 1000000) {
+                if (e.target.files[0].size > 10000000) {
                   alert(
                     "파일 사이즈가 너무 큽니다. 10MB 이하의 파일을 올려주세요."
                   );

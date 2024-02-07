@@ -1,11 +1,19 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { auth } from "@/lib/firebase/client";
-import { User, onAuthStateChanged } from "firebase/auth";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+
 const AuthContext = createContext<{
   user: User | null;
-  setUser: ((user: User | null) => void) | null;
+  setUser: Dispatch<SetStateAction<User | null>> | null;
 }>({ user: null, setUser: null });
 
 export default function AuthProvider({
@@ -14,10 +22,11 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState(auth.currentUser);
-  const checkToken = async () => {
-    // console.log("checkToken");
+
+  const checkToken = async (user: User | null) => {
+    console.log("checkToken");
     const token = await user?.getIdToken();
-    // console.log(token);
+    console.log(token);
     //? token을 서버로 보내서 유효한지 확인
     const res = await fetch("/api/auth", {
       method: "POST",
@@ -32,18 +41,23 @@ export default function AuthProvider({
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      const res = await checkToken();
-      if (res) {
+    const unsubscribe = onAuthStateChanged(auth, async (newuser) => {
+      // console.log("onAuthStateChanged", newuser);
+
+      const res = await checkToken(auth.currentUser);
+      if (newuser) {
         //? token이 유효하면
-        setUser(user);
+        newuser.reload().then(() => {
+          // console.log("reload", newuser.displayName);
+          setUser(newuser);
+        });
       } else {
         //? token이 유효하지 않으면 or 로그아웃 시
         setUser(null);
       }
     });
     return () => unsubscribe();
-  });
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
@@ -54,8 +68,9 @@ export default function AuthProvider({
 
 export const useUser = () => {
   const context = useContext(AuthContext);
+
   if (context === undefined) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error("user is null");
   }
-  return context as { user: User; setUser: (user: User) => void };
+  return context;
 };

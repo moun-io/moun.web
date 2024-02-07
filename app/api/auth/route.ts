@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
         path: "/",
         httpOnly: true,
         sameSite: "lax",
+
         // secure: true,
       });
 

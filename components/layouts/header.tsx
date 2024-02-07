@@ -6,13 +6,12 @@ import { usePathname } from "next/navigation";
 import MOUN from "@/public/image/moun.png";
 import LOGO from "@/public/image/symbol.png";
 import Image from "next/image";
-import { auth } from "@/lib/firebase/client";
-import { useUser } from "@/lib/context/authProvider";
+import { useArtist } from "@/lib/context/artistProvider";
 export default function Header({ children }: { children: React.ReactNode }) {
   const [isOpened, setIsOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [authLoading, setAuthLoading] = useState(false);
-  const { user, setUser } = useUser();
+
+  const { artist } = useArtist();
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
   const toggle = () => setIsOpened(!isOpened);
@@ -100,16 +99,14 @@ export default function Header({ children }: { children: React.ReactNode }) {
               />
             </Link>
           </div>
-          {}
-          {authLoading ? (
-            ""
-          ) : user ? (
+
+          {artist ? (
             <div className="text-white flex gap-4 ">
               <Link href="/mypage">
-                {user.photoURL ? (
+                {artist.photoURL ? (
                   <Image
                     className="rounded-full"
-                    src={user.photoURL}
+                    src={artist.photoURL}
                     width={33}
                     height={33}
                     alt="my-page"
@@ -168,7 +165,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                 "transition hover:text-purple-600 pointer-events-auto",
                 path === "/released" && "text-purple-400"
               )}
-              href="released"
+              href="/released"
             >
               Released
             </Link>

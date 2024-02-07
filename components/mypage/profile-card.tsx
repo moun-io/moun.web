@@ -2,35 +2,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { auth, db } from "@/lib/firebase/client";
-import { useEffect, useState } from "react";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { use, useEffect, useState } from "react";
+import { doc, getDoc, onSnapshot, Unsubscribe } from "firebase/firestore";
 import { Artist } from "@/lib/actions/updateProfile";
-import { onAuthStateChanged } from "firebase/auth";
+
+import { useUser } from "@/lib/context/authProvider";
+import { useArtist } from "@/lib/context/artistProvider";
 export default function ProfileCard() {
-  const [user, setUser] = useState<Artist | null>();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) return;
-      const unsub = onSnapshot(doc(db, "artists", user?.uid), (doc) => {
-        setUser(doc.data() as Artist);
-      });
-      return () => {
-        unsub();
-      };
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const { artist } = useArtist();
 
   return (
     <div className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
       <Link href="mypage/profile">
-        {user?.photoURL ? (
+        {artist?.photoURL ? (
           <Image
-            src={user.photoURL}
+            src={artist.photoURL}
             width={80}
             height={80}
             className="rounded-full"
@@ -53,7 +39,7 @@ export default function ProfileCard() {
         )}
       </Link>
       <div className="ml-4 flex flex-col justify-between ">
-        <h1 className="text-lg font-medium">{user?.displayName}</h1>
+        <h1 className="text-lg font-medium">{artist?.displayName}</h1>
         <Link href="mypage/profile">
           <div className="Center w-20 h-8 text-xs text-normal rounded-[1.25rem] border border-magenta text-magenta hover:bg-purple-500 hover:text-white hover:border-white transition-colors duration-300">
             프로필 수정
