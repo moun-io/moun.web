@@ -16,35 +16,6 @@ export default function Header({ children }: { children: React.ReactNode }) {
   const navRef = useRef<HTMLDivElement>(null);
   const toggle = () => setIsOpened(!isOpened);
 
-  // const checkToken = async () => {
-  //   // console.log("checkToken");
-  //   const token = await user?.getIdToken();
-  //   // console.log(token);
-  //   //? token을 서버로 보내서 유효한지 확인
-  //   const res = await fetch("/api/auth", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ token }),
-  //     cache: "no-store",
-  //   });
-  //   if (res.status === 200) return true;
-  //   else return false;
-  // };
-  // //* ------------ useEffect ------------//
-
-  // // * 로그인 상태 변경 Event Listener.
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     setAuthLoading(true);
-  //     setUser(user);
-  //     checkToken();
-  //     setAuthLoading(false);
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
-
   // * 화면 크기에 따른  상태 변경 Event Listener
   useEffect(() => {
     const onResize = () => {
