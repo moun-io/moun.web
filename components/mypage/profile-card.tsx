@@ -19,7 +19,7 @@ export default function ProfileCard() {
             src={artist.photoURL}
             width={80}
             height={80}
-            className="rounded-full"
+            className="rounded-full aspect-square"
             alt="userProfile"
             priority
           />
