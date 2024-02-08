@@ -6,15 +6,8 @@ import { verifyToken } from "@/lib/firebase/verifyToken";
 import { ref, uploadBytes } from "firebase/storage";
 import { log } from "firebase-functions/logger";
 import { getDownloadURL } from "firebase-admin/storage";
-
-export interface Artist {
-  displayName: string;
-  position: string[];
-  sns: string;
-  description: string;
-
-  photoURL?: string | null;
-}
+import { isValidUrl } from "@/lib/utils/isValidUrl";
+import { Artist } from "@/lib/utils/types";
 export async function onUpdateProfile(formData: FormData) {
   // await new Promise((resolve, reject) => {
   //   setTimeout(() => {
@@ -58,7 +51,7 @@ export async function onUpdateProfile(formData: FormData) {
 
     const data: Artist = {
       displayName: formData.get("name") as string,
-      position: [
+      positions: [
         formData.get("Rapper") ? "Rapper" : null,
         formData.get("Vocal") ? "Vocal" : null,
         formData.get("Producer") ? "Producer" : null,
@@ -68,12 +61,12 @@ export async function onUpdateProfile(formData: FormData) {
 
       sns: formData.get("sns") as string,
       description: formData.get("description") as string,
-      ...(photoURL && { photoURL: photoURL }),
+      ...(photoURL && isValidUrl(photoURL) && { photoURL: photoURL }),
     };
 
     if (
       data.displayName === null ||
-      data.position.length === 0 ||
+      data.positions.length === 0 ||
       data.sns === null ||
       data.description === null
     )

@@ -12,6 +12,8 @@ export default function Logout() {
         className="flex justify-between items-center h-full w-full"
         onClick={async (e) => {
           e.preventDefault();
+          const ok = confirm("모은을 떠나시겠습니까 용사여?");
+          if (!ok) return;
           try {
             await auth.signOut();
             router.replace("/");

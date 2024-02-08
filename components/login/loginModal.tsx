@@ -39,7 +39,7 @@ export default function LoginModal() {
       {loginList.map((element, idx) => (
         <div
           key={idx}
-          className="my-1 flex justify-center text-center font-medium text-base w-[min(25rem,85%)] h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:border-black2"
+          className="cursor-pointer my-1 flex justify-center text-center font-medium text-base w-[min(25rem,85%)] h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:border-black2"
           onClick={element.onLogin}
         >
           <Image

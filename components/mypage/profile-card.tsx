@@ -4,7 +4,7 @@ import Link from "next/link";
 import { auth, db } from "@/lib/firebase/client";
 import { use, useEffect, useState } from "react";
 import { doc, getDoc, onSnapshot, Unsubscribe } from "firebase/firestore";
-import { Artist } from "@/lib/actions/updateProfile";
+import { Artist } from "@/lib/utils/types";
 
 import { useUser } from "@/lib/context/authProvider";
 import { useArtist } from "@/lib/context/artistProvider";
