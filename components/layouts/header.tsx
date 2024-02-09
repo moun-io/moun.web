@@ -114,50 +114,46 @@ export default function Header({ children }: { children: React.ReactNode }) {
           }
         </div>
         {/* NAV*/}
-        <div
+        <nav
           ref={navRef}
           className="absolute transition hidden pointer-events-none w-screen h-screen lg:flex text-white  bg-neutral-900/60 lg:bg-transparent lg:h-[4.5rem] text-base"
         >
-          <div className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0">
-            <Link
+          <ol className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0">
+            <li
               className={twMerge(
                 "lg:hidden",
-                "transition hover:text-purple-600 pointer-events-auto",
+                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
                 path === "/" && "text-purple-400"
               )}
-              href="/"
             >
-              Home
-            </Link>
-            <Link
+              <Link href="/">Home</Link>
+            </li>
+            <li
               className={twMerge(
-                "transition hover:text-purple-600 pointer-events-auto",
+                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
                 path === "/songs" && "text-purple-400"
               )}
-              href="/songs"
             >
-              Songs
-            </Link>
-            <Link
+              <Link href="/songs">Songs</Link>
+            </li>
+            <li
               className={twMerge(
-                "transition hover:text-purple-600 pointer-events-auto",
+                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
                 path === "/artists" && "text-purple-400"
               )}
-              href="/artists"
             >
-              Artists
-            </Link>
-            <Link
+              <Link href="/artists">Artists</Link>
+            </li>
+            <li
               className={twMerge(
-                "transition hover:text-purple-600 pointer-events-auto",
+                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
                 path === "/released" && "text-purple-400"
               )}
-              href="/released"
             >
-              Released
-            </Link>
-          </div>
-        </div>
+              <Link href="/released">Released</Link>
+            </li>
+          </ol>
+        </nav>
       </header>
       {children}
     </>

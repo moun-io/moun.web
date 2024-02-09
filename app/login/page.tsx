@@ -14,7 +14,7 @@ export default function Login() {
           </h1>
           {/* //* login */}
           <LoginModal />
-          <p className="my-10 text-center text-gray text-sm font-normal">
+          <p className="my-4 text-center text-neutral-400 text-sm font-normal">
             회원가입시{" "}
             <Link className="underline" href="/">
               약관
