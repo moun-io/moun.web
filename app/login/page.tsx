@@ -10,7 +10,7 @@ export default function Login() {
       <h1 className="H2 w-80 my-10 hidden lg:block">
         Get To Know Each Other Through Songs
       </h1>
-      {/* //* login */}
+      {/*  login */}
       <LoginModal />
       <p className="my-4 text-center text-neutral-400 text-sm font-normal">
         회원가입시{" "}

@@ -11,9 +11,7 @@ import {
 import { auth, db } from "@/lib/firebase/client";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { Artist } from "@/lib/utils/types";
-import { set } from "firebase/database";
 import { doc, onSnapshot } from "firebase/firestore";
-import { log } from "console";
 
 const AuthContext = createContext<{
   user: User | null;
