@@ -20,12 +20,12 @@ export default async function RootLayout({
     <html lang="kr">
       <body>
         <AuthProvider>
-          <ArtistProvider>
-            <Header>
-              <main className="Center flex-col mt-[4.5rem]">{children}</main>
-            </Header>
-            <Footer />
-          </ArtistProvider>
+          {/* <ArtistProvider> */}
+          <Header>
+            <main className="Center flex-col mt-[4.5rem]">{children}</main>
+          </Header>
+          <Footer />
+          {/* </ArtistProvider> */}
         </AuthProvider>
       </body>
     </html>

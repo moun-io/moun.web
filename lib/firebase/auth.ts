@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailLink,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 export async function loginWithGoogle() {
@@ -20,7 +21,7 @@ export async function loginWithGoogle() {
 }
 export async function loginWithEmail(email: string, password: string) {
   try {
-    const credential = await (auth, "kobin1970@gmail.com");
+    const credential = await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.log(error);
 

@@ -8,13 +8,26 @@ import {
   useEffect,
   useState,
 } from "react";
-import { auth } from "@/lib/firebase/client";
+import { auth, db } from "@/lib/firebase/client";
 import { User, onAuthStateChanged } from "firebase/auth";
+import { Artist } from "@/lib/utils/types";
+import { set } from "firebase/database";
+import { doc, onSnapshot } from "firebase/firestore";
+import { log } from "console";
 
 const AuthContext = createContext<{
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>> | null;
-}>({ user: null, setUser: null });
+  authLoading: boolean;
+  artist: Artist | null;
+  artistLoading: boolean;
+}>({
+  user: null,
+  setUser: null,
+  authLoading: true,
+  artist: null,
+  artistLoading: true,
+});
 
 export default function AuthProvider({
   children,
@@ -22,7 +35,9 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState(auth.currentUser);
-
+  const [authLoading, setAuthLoading] = useState(true);
+  const [artistLoading, setArtistLoading] = useState(true);
+  const [artist, setArtist] = useState<Artist | null>(null);
   const checkToken = async (user: User | null) => {
     console.log("checkToken");
     const token = await user?.getIdToken();
@@ -42,24 +57,40 @@ export default function AuthProvider({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (newuser) => {
+      setAuthLoading(true);
+      setArtistLoading(true);
       // console.log("onAuthStateChanged", newuser);
       const res = await checkToken(auth.currentUser);
-      if (newuser) {
+      if (newuser && res) {
         //? token이 유효하면
         // newuser.reload().then(() => {
         // console.log("reload", newuser.displayName);
         setUser(newuser);
-        // });
+        setAuthLoading(false);
+        const unsub = onSnapshot(doc(db, "artists", newuser.uid), (doc) => {
+          console.log(doc.data());
+          if (doc.exists()) {
+            setArtist(doc.data() as Artist);
+            console.log(artist);
+            setArtistLoading(false);
+          }
+        });
+        return () => unsub();
       } else {
         //? token이 유효하지 않으면 or 로그아웃 시
         setUser(null);
+        setArtist(null);
+        setAuthLoading(false);
+        setArtistLoading(false);
       }
     });
     return () => unsubscribe();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider
+      value={{ user, setUser, authLoading, artist, artistLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

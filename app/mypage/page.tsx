@@ -72,7 +72,7 @@ export default function Profile() {
             className=" flex items-center justify-between bg-black text-white font-bold w-[min(28rem,100%) px-5 py-4 rounded-xl m-4"
           >
             <div>
-              1분 만에 <p className="inline text-green-400"> 내 노래 </p>
+              1분 만에 <span className="inline text-green-400"> 내 노래 </span>
               등록하기
             </div>
             <div className="rounded-full bg-neutral-700 p-2 w-10 Center">

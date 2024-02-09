@@ -10,11 +10,8 @@ import {
   useState,
 } from "react";
 import { db, auth } from "@/lib/firebase/client";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { Unsubscribe, doc, onSnapshot } from "firebase/firestore";
-import { log } from "console";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useUser } from "./authProvider";
-import { set } from "firebase/database";
 
 export interface Artist {
   displayName: string;
@@ -26,7 +23,8 @@ export interface Artist {
 const ArtistContext = createContext<{
   artist: Artist | null;
   setArtist: Dispatch<SetStateAction<Artist | null>> | null;
-}>({ artist: null, setArtist: null });
+  artistLoading: boolean;
+}>({ artist: null, setArtist: null, artistLoading: true });
 
 export default function ArtistProvider({
   children,
@@ -35,15 +33,22 @@ export default function ArtistProvider({
 }) {
   const { user } = useUser();
   const [artist, setArtist] = useState<Artist | null>(null);
+  const [artistLoading, setArtistLoading] = useState(true);
 
   useEffect(() => {
+    setArtistLoading(true);
+    console.log(artistLoading);
+
     if (!user) {
       setArtist(null);
+      setArtistLoading(false);
     } else {
       const unsub = onSnapshot(doc(db, "artists", user.uid), (doc) => {
         console.log(doc.data());
         if (doc.exists()) {
           setArtist(doc.data() as Artist);
+          setArtistLoading(false);
+          console.log(artistLoading);
         }
       });
       return () => unsub();
@@ -51,7 +56,7 @@ export default function ArtistProvider({
   }, [user]);
 
   return (
-    <ArtistContext.Provider value={{ artist, setArtist }}>
+    <ArtistContext.Provider value={{ artist, setArtist, artistLoading }}>
       {children}
     </ArtistContext.Provider>
   );
