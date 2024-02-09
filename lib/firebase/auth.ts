@@ -22,6 +22,7 @@ export async function loginWithGoogle() {
 export async function loginWithEmail(email: string, password: string) {
   try {
     const credential = await signInWithEmailAndPassword(auth, email, password);
+    return credential;
   } catch (error) {
     console.log(error);
 

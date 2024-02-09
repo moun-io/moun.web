@@ -26,18 +26,18 @@ export default function LoginModal() {
       console.log(error);
     }
   };
-  // const onEmailLogin = async (email, password) => {
-  //   try {
-  //     const credential = await loginWithEmail(email, password);
-  //     if (credential) {
-  //       router.replace("/");
-  //     } else {
-  //       setErrorMsg("아이디와 비밀번호를 다시 확인해주세요.");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const onEmailLogin = async (email: string, password: string) => {
+    try {
+      const credential = await loginWithEmail(email, password);
+      if (credential) {
+        router.replace("/");
+      } else {
+        setErrorMsg("아이디와 비밀번호를 다시 확인해주세요.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const loginList = [
     {
       title: "구글로 로그인하기",
