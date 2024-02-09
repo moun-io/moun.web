@@ -29,13 +29,13 @@ export default function ArtistList() {
       ? query(
           collection(db, "artists"),
           where("positions", "!=", false),
-          limit(6),
+          limit(10),
           startAfter(page)
         )
       : query(
           collection(db, "artists"),
           where("positions", "!=", false),
-          limit(6)
+          limit(10)
         );
 
     const querySnapshot = await getDocs(q);
@@ -57,14 +57,14 @@ export default function ArtistList() {
 
   useEffect(() => {
     if (inView) {
-      // console.log("inView", inView);
+      console.log("inView", inView);
       fetchData(page).then((lastPage) => {
         if (lastPage) {
           setPage(lastPage);
-          console.log("lastPage", lastPage.data());
+          // console.log("lastPage", lastPage.data());
         } else {
           setEnd(true);
-          // console.log("end", end);
+          console.log("end", end);
         }
       });
     }

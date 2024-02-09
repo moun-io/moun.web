@@ -13,6 +13,7 @@ export default function LoginModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
   const onGoogleLogin = async () => {
     try {
       const credential = await loginWithGoogle();
@@ -25,18 +26,18 @@ export default function LoginModal() {
       console.log(error);
     }
   };
-  const onEmailLogin = async (email, password) => {
-    try {
-      const credential = await loginWithEmail(email, password);
-      if (credential) {
-        router.replace("/");
-      } else {
-        setErrorMsg("아이디와 비밀번호를 다시 확인해주세요.");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const onEmailLogin = async (email, password) => {
+  //   try {
+  //     const credential = await loginWithEmail(email, password);
+  //     if (credential) {
+  //       router.replace("/");
+  //     } else {
+  //       setErrorMsg("아이디와 비밀번호를 다시 확인해주세요.");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const loginList = [
     {
       title: "구글로 로그인하기",
@@ -87,20 +88,26 @@ export default function LoginModal() {
           Login
         </button>
       </form>
-      <section className="text-sm text-neutral-500 my-2">
-        {/* <p className="font-medium inline">Moun</p>이 처음이신가요? */}
-        <Link href="/" className="text-purple-400">
-          Sign up{" "}
+      <div className="text-sm text-neutral-400 my-2 ">
+        <strong className="font-medium">Moun</strong>이 처음이신가요?{" "}
+        <Link
+          href="/signup"
+          className="text-purple-400 underline hover:animate-pulse"
+        >
+          Sign up →
         </Link>
-        <Link href="/" className="text-purple-400">
-          | Reset Password
+      </div>
+
+      <div className="text-sm text-neutral-400 ">
+        비밀번호를 잊어버리셨나요?{" "}
+        <Link
+          href="/"
+          className="text-purple-400 hover:animate-pulse underline"
+        >
+          {" "}
+          Reset Password →
         </Link>
-      </section>
-
-      {/* <div className="text-sm text-neutral-500 ">
-        비밀번호를 잊어버리셨나요?
-
-      </div> */}
+      </div>
       {errorMsg && (
         <div className="text-red-600 text-md my-2 animate-pulse ">
           {errorMsg}

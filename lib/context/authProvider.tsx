@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { auth } from "@/lib/firebase/client";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 const AuthContext = createContext<{
   user: User | null;
@@ -43,14 +43,13 @@ export default function AuthProvider({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (newuser) => {
       // console.log("onAuthStateChanged", newuser);
-
       const res = await checkToken(auth.currentUser);
       if (newuser) {
         //? token이 유효하면
-        newuser.reload().then(() => {
-          // console.log("reload", newuser.displayName);
-          setUser(newuser);
-        });
+        // newuser.reload().then(() => {
+        // console.log("reload", newuser.displayName);
+        setUser(newuser);
+        // });
       } else {
         //? token이 유효하지 않으면 or 로그아웃 시
         setUser(null);
