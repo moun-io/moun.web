@@ -1,64 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
-
-import { auth, db } from "@/lib/firebase/client";
-import { doc, getDoc } from "firebase/firestore";
+import React from "react";
+import { useRef, useState } from "react";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
-
 import SubmitButton from "@/components/mypage/submit-button";
-
+import { Box, TextInput } from "@/components/mypage/form";
 import Image from "next/image";
-function Box({
-  children,
-  label,
-  description,
-  required = false,
-}: {
-  children: React.ReactNode;
-  label: string;
-  description?: string;
-  required?: boolean;
-}) {
-  return (
-    <div className="w-full border-neutral-300 border-solid border rounded-2xl p-6">
-      <label className="block font-bold">
-        {label} {required && <p className="inline"> * </p>}
-      </label>
-      {description && (
-        <div className="text-neutral-400 text-sm mt-4">{description}</div>
-      )}
-      <div className="mt-8">{children}</div>
-    </div>
-  );
-}
+import { useFormState } from "react-dom";
+import { useUser } from "@/lib/context/authProvider";
 
-function TextInput({
-  placeholder,
-  name,
-  value,
-  onChange,
-  defaultValue,
-}: {
-  placeholder: string;
-  name: string;
-  value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  defaultValue?: string;
-}) {
-  return (
-    <input
-      onChange={onChange}
-      value={value}
-      className="w-full bg-neutral-100 rounded-lg p-4"
-      type="text"
-      name={name}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-    />
-  );
-}
-export default function Edit() {
+export default function Profile() {
   const Positions: ["Producer", "Vocal", "Rapper", "Engineer", "AnR"] = [
     "Producer",
     "Vocal",
@@ -66,23 +16,60 @@ export default function Edit() {
     "Engineer",
     "AnR",
   ];
-  const [user, setUser] = useState(auth.currentUser);
-
+  const reader = new FileReader();
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-  // useEffect(() => {
-  //   if (!user) return;
-  //   const docRef = doc(db, "artists", user.uid);
-  //   getDoc(docRef).then((doc) => {
-  //     if (doc.exists()) setUser(doc.data());
-  //   });
-  // }, [user]);
+  const { artist, user } = useUser();
+  const [state, updateAction] = useFormState(onUpdateProfile, {
+    message: "",
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const removeImage = (e: React.MouseEvent) => {
+    const ok = confirm("정말로 삭제하시겠습니까?");
+    if (ok) {
+      if (fileInputRef?.current?.value) {
+        setFileUrl(null);
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.size > 0) {
+        if (file.size > 10000000) {
+          alert("파일 사이즈가 너무 큽니다. 10MB 이하의 파일을 올려주세요.");
+          return;
+        } else {
+          reader.onload = (readEvent) => {
+            if (
+              readEvent.target != null &&
+              typeof readEvent.target.result === "string"
+            ) {
+              setFileUrl(readEvent.target.result);
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    } else {
+      setFileUrl(null);
+    }
+  };
   return (
-    <form action={onUpdateProfile} className="flex flex-col gap-4">
+    <form action={updateAction} className="flex flex-col gap-4">
       <Box label="활동명" required>
-        <TextInput placeholder="활동명 입력" name="name" />
+        <TextInput
+          placeholder="활동명 입력"
+          required={true}
+          name="name"
+          defaultValue={artist?.displayName}
+        />
       </Box>
       <Box label="포지션" required>
-        <div className="flex flex-wrap gap-4">
+        <fieldset className="flex flex-wrap gap-4">
+          <legend hidden>Choose your Positions</legend>
           {Positions.map((element, idx) => (
             <div key={idx}>
               <input
@@ -90,6 +77,7 @@ export default function Edit() {
                 type="checkbox"
                 name={element}
                 className="peer hidden"
+                defaultChecked={artist?.positions.includes(element)}
               />
               <label
                 htmlFor={element}
@@ -101,10 +89,14 @@ export default function Edit() {
               </label>
             </div>
           ))}
-        </div>
+        </fieldset>
       </Box>
       <Box label="SNS" description="매력을 어필할 SNS 계정을 연결해주세요">
-        <TextInput name="sns" placeholder="인스타그램 프로필 URL 입력" />
+        <TextInput
+          name="sns"
+          placeholder="인스타그램 프로필 URL 입력"
+          defaultValue={artist?.sns}
+        />
       </Box>
       <Box
         label="자기소개"
@@ -115,13 +107,38 @@ export default function Edit() {
           placeholder="자기소개 입력"
           maxLength={50}
           name="description"
+          defaultValue={artist?.description}
         />
       </Box>
       <Box
         label="프로필 이미지"
         description="매력적인 이미지가 있으면 경매 입찰 수가 2배까지 늘어나요"
       >
+        {/* 삭제버튼 */}
+        {fileUrl && (
+          <div
+            onClick={removeImage}
+            className="relative Center top-80 h-0 cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="red"
+              className="w-6 h-6 bg-white rounded-full"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </div>
+        )}
+
         <div className="Center text-neutral-600">
+          {/* 이미지 업로드 버튼 */}
           <label
             htmlFor="photo"
             className=" Center flex-col  gap-4 bg-neutral-100 size-80 rounded-full cursor-pointer"
@@ -156,41 +173,19 @@ export default function Edit() {
               </>
             )}
           </label>
+          {/* 이미지 업로드 인풋 */}
           <input
             id="photo"
             name="photo"
             type="file"
+            accept="image/png, image/jpeg, image/jpg"
             hidden
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                if (e.target.files[0].size > 10000000) {
-                  alert(
-                    "파일 사이즈가 너무 큽니다. 10MB 이하의 파일을 올려주세요."
-                  );
-                  return;
-                }
-                const reader = new FileReader();
-                const file = e.target.files[0];
-                if (file) {
-                  console.log(file);
-                  reader.onload = (readEvent) => {
-                    if (
-                      readEvent.target != null &&
-                      typeof readEvent.target.result === "string"
-                    ) {
-                      setFileUrl(readEvent.target.result);
-                      console.log(readEvent.target.result);
-                    }
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }
-            }}
+            ref={fileInputRef}
+            onChange={handleImageChange}
           />
         </div>
       </Box>
-      {user && <input hidden type="text" name="userId" value={user?.uid} />}
-      <SubmitButton />
+      <SubmitButton errorMsg={state.message} />
     </form>
   );
 }

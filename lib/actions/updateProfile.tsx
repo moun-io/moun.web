@@ -8,7 +8,11 @@ import { log } from "firebase-functions/logger";
 import { getDownloadURL } from "firebase-admin/storage";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
 import { Artist } from "@/lib/utils/types";
-export async function onUpdateProfile(formData: FormData) {
+
+export async function onUpdateProfile(
+  prevState: { message: string },
+  formData: FormData
+) {
   // await new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     console.log("waiting");
@@ -25,27 +29,35 @@ export async function onUpdateProfile(formData: FormData) {
   //? 유저가 작성한 프로필인지 확인
   if (formData.get("userId") === decodedToken.uid) {
     const file = formData.get("photo") as File;
+    console.log("file", file);
+
     let photoURL: string = "";
-    console.log("formData", formData.get("photo"));
-
+    // console.log("formData", formData.get("photo"));
     const buffer = await file.arrayBuffer();
-    console.log(buffer);
-
-    if (file && file.size < 10000000 && file.type.includes("image")) {
-      try {
-        const fileRef = await storage
-          .bucket("moun-df9ff.appspot.com")
-          .file(`avatars/${decodedToken.uid}`);
-        console.log("fileRef", fileRef);
-        await fileRef.save(Buffer.from(buffer), {
-          contentType: file.type,
-          metadata: {
-            cacheControl: "public, max-age=31536000",
-          },
-        });
-        photoURL = await getDownloadURL(fileRef);
-      } catch (error) {
-        console.log(error);
+    // console.log(buffer);
+    //* 이미지 업로드
+    if (file.size > 0) {
+      //*파일이 있을 때만 업로드
+      if (file.size < 10000000 && file.type === ("image/png" || "image/jpg")) {
+        try {
+          const fileRef = await storage
+            .bucket("moun-df9ff.appspot.com")
+            .file(`avatars/${decodedToken.uid}`);
+          console.log("fileRef", fileRef);
+          await fileRef.save(Buffer.from(buffer), {
+            contentType: file.type,
+            metadata: {
+              cacheControl: "public, max-age=31536000",
+            },
+          });
+          photoURL = await getDownloadURL(fileRef);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        return {
+          message: "10MB이하의 PNG/JPG 파일을 올려주세요. ",
+        };
       }
     }
 
@@ -58,19 +70,16 @@ export async function onUpdateProfile(formData: FormData) {
         formData.get("Engineer") ? "Engineer" : null,
         formData.get("AnR") ? "AnR" : null,
       ].filter((position) => position !== null) as string[],
-
       sns: formData.get("sns") as string,
       description: formData.get("description") as string,
       ...(photoURL && isValidUrl(photoURL) && { photoURL: photoURL }),
     };
+    if (data.displayName.length < 2)
+      return { message: "2자 이상의 활동명을 입력해주세요" };
 
-    if (
-      data.displayName === null ||
-      data.positions.length === 0 ||
-      data.sns === null ||
-      data.description === null
-    )
-      return redirect("/mypage/edit/profile");
+    if (data.positions.length === 0)
+      return { message: "포지션을 선택해주세요" };
+
     try {
       await db
         .collection("artists")
@@ -85,6 +94,6 @@ export async function onUpdateProfile(formData: FormData) {
 
     redirect("/mypage");
   } else {
-    redirect("/login");
+    return { message: "잘못된 접근입니다." };
   }
 }

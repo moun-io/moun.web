@@ -1,10 +1,15 @@
 "use client";
-import React from "react";
+
 import { useFormStatus } from "react-dom";
-export default function SubmitButton() {
+import { useUser } from "@/lib/context/authProvider";
+export default function SubmitButton({ errorMsg }: { errorMsg: string }) {
   const { pending } = useFormStatus();
+  const { user } = useUser();
   return (
     <>
+      {user && (
+        <input hidden type="text" name="userId" value={user.uid} readOnly />
+      )}
       {pending ? (
         <div className="Center rounded-xl text-neutral-500 bg-neutral-300 p-4">
           Loading...
@@ -13,9 +18,18 @@ export default function SubmitButton() {
         <button
           type="submit"
           className="rounded-xl text-neutral-500 bg-neutral-300 p-4 hover:bg-purple-500 hover:text-white transition"
+          onClick={() => {
+            const ok = confirm("프로필을 업데이트하시겠습니까?");
+            if (!ok) return;
+          }}
         >
           Confirm
         </button>
+      )}
+      {errorMsg && (
+        <div className="Center text-red-600 animate-bounce font-bold">
+          {errorMsg}
+        </div>
       )}
     </>
   );

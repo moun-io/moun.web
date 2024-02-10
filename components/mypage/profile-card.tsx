@@ -35,7 +35,11 @@ export default function ProfileCard() {
         )}
       </Link>
       <div className="ml-4 flex flex-col justify-between ">
-        <h1 className="text-lg font-medium">{artist?.displayName}</h1>
+        <h1 className="text-lg font-medium">
+          {artist?.displayName}
+          <span className="text-xs text-neutral-400">{artist?.positions}</span>
+        </h1>
+
         <Link href="mypage/profile">
           <div className="Center w-20 h-8 text-xs text-normal rounded-[1.25rem] border border-magenta text-magenta hover:bg-purple-500 hover:text-white hover:border-white transition-colors duration-300">
             프로필 수정

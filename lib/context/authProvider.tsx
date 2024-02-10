@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase/client";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { Artist } from "@/lib/utils/types";
@@ -15,13 +8,11 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 const AuthContext = createContext<{
   user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>> | null;
   authLoading: boolean;
   artist: Artist | null;
   artistLoading: boolean;
 }>({
   user: null,
-  setUser: null,
   authLoading: true,
   artist: null,
   artistLoading: true,
@@ -33,13 +24,14 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState(auth.currentUser);
+  const [artist, setArtist] = useState<Artist | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [artistLoading, setArtistLoading] = useState(true);
-  const [artist, setArtist] = useState<Artist | null>(null);
+
   const checkToken = async (user: User | null) => {
-    console.log("checkToken");
+    // console.log("checkToken");
     const token = await user?.getIdToken();
-    console.log(token);
+    // console.log(token);
     //? token을 서버로 보내서 유효한지 확인
     const res = await fetch("/api/auth", {
       method: "POST",
@@ -66,10 +58,10 @@ export default function AuthProvider({
         setUser(newuser);
         setAuthLoading(false);
         const unsub = onSnapshot(doc(db, "artists", newuser.uid), (doc) => {
-          console.log(doc.data());
+          // console.log(doc.data());
           if (doc.exists()) {
             setArtist(doc.data() as Artist);
-            console.log(artist);
+            // console.log(artist);
             setArtistLoading(false);
           }
         });
@@ -86,9 +78,7 @@ export default function AuthProvider({
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, setUser, authLoading, artist, artistLoading }}
-    >
+    <AuthContext.Provider value={{ user, authLoading, artist, artistLoading }}>
       {children}
     </AuthContext.Provider>
   );
