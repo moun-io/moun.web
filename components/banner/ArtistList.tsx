@@ -46,6 +46,7 @@ export default function ArtistList() {
         return [
           ...(prev || []),
           {
+            uid: doc.id,
             ...(doc.data() as Artist),
           },
         ];
@@ -74,14 +75,18 @@ export default function ArtistList() {
     <div className="mt-4 gap-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5  w-full">
       {artistData &&
         artistData.map((artist, index) => {
-          return (
-            <ArtistCard
-              key={index}
-              src={artist.photoURL}
-              name={artist.displayName}
-              positions={artist.positions}
-            />
-          );
+          if (artist.uid) {
+            return (
+              <ArtistCard
+                key={index}
+                src={artist.photoURL}
+                name={artist.displayName}
+                positions={artist.positions}
+                uid={artist.uid}
+                description={artist.description}
+              />
+            );
+          }
         })}
       {/* Spinner */}
       {!end && (

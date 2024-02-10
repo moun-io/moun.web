@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { db, storage } from "../firebase/server";
 import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/firebase/verifyToken";
-import { ref, uploadBytes } from "firebase/storage";
-import { log } from "firebase-functions/logger";
 import { getDownloadURL } from "firebase-admin/storage";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
 import { Artist } from "@/lib/utils/types";
