@@ -6,4 +6,5 @@ export interface Artist {
   sns: string;
   description: string;
   photoURL?: string;
+  verified?: boolean;
 }

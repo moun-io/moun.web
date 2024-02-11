@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
 import { useArtists } from "@/lib/context/artistsProvider";
+import Profile from "@/components/svg/profile";
+import Verified from "@/components/svg/verified";
 export default function ArtistModal({ params }: { params: { uid: string } }) {
   const { artistsData } = useArtists();
   const artist = artistsData?.find((artist) => artist.uid === params.uid);
@@ -19,17 +21,13 @@ export default function ArtistModal({ params }: { params: { uid: string } }) {
               className="rounded-full object-cover aspect-square"
             ></Image>
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className=""
-              width={100}
-              height={100}
-            />
+            <Profile className="size-20" />
           )}
           <div className="flex flex-col gap-2">
-            <h2 className="H2">{artist.displayName}</h2>
+            <h2 className="H2 flex gap-2 items-center">
+              {artist.displayName}
+              {artist.verified && <Verified className="size-6" />}
+            </h2>
             <div className="text-xs text-neutral-400">
               {artist.positions.map((position, index) => {
                 if (index == 0) {
