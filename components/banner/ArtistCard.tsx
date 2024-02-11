@@ -14,7 +14,7 @@ export default function ArtistCard({
   uid: string;
   description: string;
 }) {
-  console.log(uid, "uid");
+  // console.log(uid, "uid");
 
   return (
     <Link scroll={false} href={`/artists/${uid}`}>

@@ -7,7 +7,6 @@ import {
   getDocs,
   limit,
   startAfter,
-  DocumentData,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 import { useEffect, useState } from "react";
@@ -15,79 +14,53 @@ import { Artist } from "@/lib/utils/types";
 import ArtistCard from "./ArtistCard";
 import { useInView } from "react-intersection-observer";
 import { QueryDocumentSnapshot } from "firebase/firestore";
+import { useArtists } from "@/lib/context/artistsProvider";
 
 export default function ArtistList() {
-  const [artistData, setArtistData] = useState<Artist[] | null>(null);
-  const { ref, inView } = useInView({
-    threshold: 0,
-  });
-  const [page, setPage] = useState<QueryDocumentSnapshot>();
+  const { ref, inView } = useInView({ threshold: 0 });
+  const { artistsData, setArtistsData, setPage, page } = useArtists();
   const [end, setEnd] = useState(false);
 
-  const fetchData = async (page?: QueryDocumentSnapshot) => {
-    const q = page
-      ? query(
-          collection(db, "artists"),
-          where("positions", "!=", false),
-          limit(10),
-          startAfter(page)
-        )
-      : query(
-          collection(db, "artists"),
-          where("positions", "!=", false),
-          limit(10)
-        );
+  const fetchData = async () => {
+    if (end) return;
 
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data() as Artist);
-      setArtistData((prev) => {
-        return [
-          ...(prev || []),
-          {
-            uid: doc.id,
-            ...(doc.data() as Artist),
-          },
-        ];
-      });
-    });
-    const lastPage = querySnapshot.docs[querySnapshot.docs.length - 1];
-    return lastPage;
+    const artistsRef = collection(db, "artists");
+    const constraints = [
+      where("positions", "!=", false),
+      limit(10),
+      ...(page ? [startAfter(page)] : []),
+    ];
+    const Query = query(artistsRef, ...constraints);
+    const querySnapshot = await getDocs(Query);
+    if (!querySnapshot.empty) {
+      const newArtists = querySnapshot.docs.map((doc) => ({
+        uid: doc.id,
+        ...(doc.data() as Artist),
+      }));
+      setArtistsData((prev) => [...(prev || []), ...newArtists]);
+      setPage(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    } else {
+      setEnd(true);
+    }
   };
 
   useEffect(() => {
-    if (inView) {
-      console.log("inView", inView);
-      fetchData(page).then((lastPage) => {
-        if (lastPage) {
-          setPage(lastPage);
-          // console.log("lastPage", lastPage.data());
-        } else {
-          setEnd(true);
-          console.log("end", end);
-        }
-      });
+    if (inView && !end) {
+      fetchData();
     }
-  }, [inView]);
-
+  }, [inView, end]);
   return (
     <div className="mt-4 gap-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5  w-full">
-      {artistData &&
-        artistData.map((artist, index) => {
-          if (artist.uid) {
-            return (
-              <ArtistCard
-                key={index}
-                src={artist.photoURL}
-                name={artist.displayName}
-                positions={artist.positions}
-                uid={artist.uid}
-                description={artist.description}
-              />
-            );
-          }
-        })}
+      {artistsData?.map((artist, index) => (
+        <ArtistCard
+          key={index}
+          src={artist.photoURL}
+          name={artist.displayName}
+          positions={artist.positions}
+          uid={artist.uid as string}
+          description={artist.description}
+        />
+      ))}
       {/* Spinner */}
       {!end && (
         <div role="status" ref={ref} className="Center col-span-full">
