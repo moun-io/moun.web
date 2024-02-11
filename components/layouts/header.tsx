@@ -47,7 +47,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <header className="fixed top-0 z-50 flex w-full bg-neutral-900 h-[4.5rem]">
+      <header className="fixed top-0 z-40 flex w-full bg-neutral-900 h-[4.5rem]">
         <div className="Box px-4 flex  justify-between items-center">
           <div className=" flex gap-3">
             <div className="lg:hidden">
@@ -132,7 +132,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
             <li
               className={twMerge(
                 "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path === "/songs" && "text-purple-400"
+                path.includes("/songs") && "text-purple-400"
               )}
             >
               <Link href="/songs">Songs</Link>
@@ -140,7 +140,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
             <li
               className={twMerge(
                 "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path === "/artists" && "text-purple-400"
+                path.includes("/artists") && "text-purple-400"
               )}
             >
               <Link href="/artists">Artists</Link>
@@ -148,7 +148,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
             <li
               className={twMerge(
                 "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path === "/released" && "text-purple-400"
+                path.includes("/released") && "text-purple-400"
               )}
             >
               <Link href="/released">Released</Link>
