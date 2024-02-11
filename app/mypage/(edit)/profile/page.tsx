@@ -16,7 +16,7 @@ export default function Profile() {
     "Engineer",
     "AnR",
   ];
-  const reader = new FileReader();
+
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const { artist, user } = useUser();
   const [state, updateAction] = useFormState(onUpdateProfile, {
@@ -42,6 +42,7 @@ export default function Profile() {
           alert("파일 사이즈가 너무 큽니다. 10MB 이하의 파일을 올려주세요.");
           return;
         } else {
+          const reader = new FileReader();
           reader.onload = (readEvent) => {
             if (
               readEvent.target != null &&

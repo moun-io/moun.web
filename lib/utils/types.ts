@@ -1,10 +1,17 @@
 export interface Artist {
-  uid?: string;
   displayName: string;
   positions: string[];
+  sns: string;
+  description: string;
+  uid?: string;
   email: string;
+  photoURL?: string;
+  verified?: boolean;
+}
+export interface ArtistForm {
+  displayName: string;
+  positions: string[];
   sns: string;
   description: string;
   photoURL?: string;
-  verified?: boolean;
 }

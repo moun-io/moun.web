@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/firebase/verifyToken";
 import { getDownloadURL } from "firebase-admin/storage";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
-import { Artist } from "@/lib/utils/types";
+import { ArtistForm } from "@/lib/utils/types";
 
 export async function onUpdateProfile(
   prevState: { message: string },
@@ -59,7 +59,7 @@ export async function onUpdateProfile(
       }
     }
 
-    const data: Artist = {
+    const data: ArtistForm = {
       displayName: formData.get("name") as string,
       positions: [
         formData.get("Rapper") ? "Rapper" : null,
