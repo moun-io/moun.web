@@ -101,7 +101,7 @@ export default function ImageSlider({
           key={element.id}
           type="button"
           style={idx === 0 ? { left: "0" } : { right: "0" }}
-          className="flex absolute top-0 z-20 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none"
+          className="flex absolute top-0 z-10 justify-center items-center px-4 h-full cursor-pointer group focus:outline-none"
           data-carousel-next
           onClick={element.click}
         >

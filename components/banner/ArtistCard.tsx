@@ -17,7 +17,7 @@ export default function ArtistCard({
   console.log(uid, "uid");
 
   return (
-    <Link href={`/artists/${uid}`}>
+    <Link scroll={false} href={`/artists/${uid}`}>
       <figure className="Center flex-col p-2 gap-2">
         {isValidUrl(src) ? (
           <Image

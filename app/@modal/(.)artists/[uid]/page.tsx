@@ -8,5 +8,11 @@ export default function ArtistModal({
 }) {
   console.log("uid", params.uid);
 
-  return params.uid && <Modal>{params.uid}</Modal>;
+  return (
+    params.uid && (
+      <Modal>
+        <div className="bg-white w-8">d</div>
+      </Modal>
+    )
+  );
 }
