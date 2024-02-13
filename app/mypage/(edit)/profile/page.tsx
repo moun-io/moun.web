@@ -7,6 +7,7 @@ import { Box, TextInput } from "@/components/mypage/form";
 import Image from "next/image";
 import { useFormState } from "react-dom";
 import { useUser } from "@/lib/context/authProvider";
+import { sendEmailVerification } from "firebase/auth";
 
 export default function Profile() {
   const Positions: ["Producer", "Vocal", "Rapper", "Engineer", "AnR"] = [
@@ -58,6 +59,33 @@ export default function Profile() {
       setFileUrl(null);
     }
   };
+
+  if (user?.emailVerified === false) {
+    return (
+      <div className="Center flex-col gap-4">
+        <h1 className="text-2xl text-red-600">이메일 인증이 필요합니다.</h1>
+        <p className="text-xs text-neutral-600">
+          이메일 인증을 위해 이메일을 확인해주세요.
+        </p>
+        <button
+          className="underline text-blue-400"
+          onClick={(e) => {
+            e.preventDefault();
+            sendEmailVerification(user).then(
+              () => {
+                alert("인증메일을 보냈습니다.");
+              },
+              () => {
+                alert("인증메일을 보내지 못했습니다.");
+              }
+            );
+          }}
+        >
+          이메일 다시 보내기
+        </button>
+      </div>
+    );
+  }
   return (
     <form action={updateAction} className="flex flex-col gap-4">
       <Box label="활동명" required>
@@ -78,7 +106,7 @@ export default function Profile() {
                 type="checkbox"
                 name={element}
                 className="peer hidden"
-                defaultChecked={artist?.positions.includes(element)}
+                defaultChecked={artist?.positions?.includes(element) || false}
               />
               <label
                 htmlFor={element}

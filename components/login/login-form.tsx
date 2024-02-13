@@ -8,7 +8,9 @@ import { loginWithGoogle, loginWithEmail } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginModal() {
+import LoginInput from "./login-input";
+
+export default function LoginForm() {
   const [errorMsg, setErrorMsg] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +40,7 @@ export default function LoginModal() {
       console.log(error);
     }
   };
+
   const loginList = [
     {
       title: "구글로 로그인하기",
@@ -62,27 +65,17 @@ export default function LoginModal() {
         }}
         className="w-full Center flex-col"
       >
-        <input
+        <LoginInput
           type="email"
-          name="email"
           value={email}
-          required
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          setter={setEmail}
           placeholder="Email"
-          className="my-1 px-4 font-medium w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:border-neutral-300 "
         />
-        <input
+        <LoginInput
           type="password"
-          name="password"
           value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          required
+          setter={setPassword}
           placeholder="Password"
-          className="my-1 px-4 font-medium w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:border-neutral-300 "
         />
         <button className="my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:bg-purple-500  hover:text-white transition hover:border-neutral-300">
           Login
