@@ -8,6 +8,7 @@ import {
 import { auth } from "@/lib/firebase/client";
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -82,40 +83,65 @@ export default function SignupForm() {
     }
   }, [password, confirmPassword]);
   return (
-    <form onSubmit={onSingup} className="w-full Center flex-col">
-      <LoginInput
-        type="email"
-        value={email}
-        placeholder="Email"
-        setter={setEmail}
-      />
-      <LoginInput
-        type="password"
-        value={password}
-        placeholder="Password"
-        setter={setPassword}
-      />
-      <LoginInput
-        type="password"
-        value={confirmPassword}
-        placeholder="Confirm Password"
-        setter={setConfirmPassword}
-      />
+    <>
+      <form onSubmit={onSingup} className="my-4 w-full Center flex-col">
+        <LoginInput
+          type="email"
+          value={email}
+          placeholder="Email"
+          setter={setEmail}
+        />
+        <LoginInput
+          type="password"
+          value={password}
+          placeholder="Password"
+          setter={setPassword}
+        />
 
-      {pending ? (
-        <div className="Center my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem]">
-          Loading...
-        </div>
-      ) : (
-        <button className="my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:bg-purple-500  hover:text-white transition hover:border-neutral-300">
-          회원가입
-        </button>
-      )}
-      {errorMsg && (
-        <div className="text-red-600 text-md my-2 animate-pulse ">
-          {errorMsg}
-        </div>
-      )}
-    </form>
+        <LoginInput
+          type="password"
+          value={confirmPassword}
+          placeholder="Confirm Password"
+          setter={setConfirmPassword}
+        />
+        <label htmlFor="password" className="text-xs text-neutral-400 my-2">
+          비밀번호는 숫자, 특수문자를 포함한 8자이상.
+        </label>
+
+        {pending ? (
+          <div className="Center my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem]">
+            Loading...
+          </div>
+        ) : (
+          <button className="my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:bg-purple-500  hover:text-white transition hover:border-neutral-300">
+            회원가입
+          </button>
+        )}
+        {errorMsg && (
+          <div className="text-red-600 text-md my-2 animate-pulse ">
+            {errorMsg}
+          </div>
+        )}
+      </form>
+      <div className="text-sm text-neutral-400 my-2 ">
+        이미 <strong className="font-medium">계정</strong>이 있으신가요?{" "}
+        <Link
+          href="/login"
+          className="text-purple-400 underline hover:animate-pulse"
+        >
+          Log in→
+        </Link>
+      </div>
+
+      <div className="text-sm text-neutral-400 ">
+        비밀번호를 잊어버리셨나요?{" "}
+        <Link
+          href="/"
+          className="text-purple-400 hover:animate-pulse underline"
+        >
+          Reset Password →
+        </Link>
+      </div>
+    </>
   );
 }
