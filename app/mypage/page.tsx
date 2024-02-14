@@ -28,10 +28,10 @@ export default function Profile() {
 
   return (
     <div className="flex-col w-full">
-      <header className="mt-28">
+      <section className="mt-28">
         <ProfileCard />
-      </header>
-      <div className="mt-8 w-full bg-neutral-100/75 h-[40rem]">
+      </section>
+      <section className="mt-8 w-full bg-neutral-100/75 h-[40rem]">
         <div className="w-[min(28rem,100%)] m-auto">
           <ol className="flex flex-col">
             {list.map((item, idx) => {
@@ -80,7 +80,7 @@ export default function Profile() {
             </div>
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

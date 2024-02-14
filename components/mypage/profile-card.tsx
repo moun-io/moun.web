@@ -4,20 +4,13 @@ import Link from "next/link";
 import { useUser } from "@/lib/context/authProvider";
 import Profile from "@/components/svg/profile";
 import Verified from "../svg/verified";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function ProfileCard() {
   const { artist, artistLoading, user } = useUser();
-  const router = useRouter();
-  useEffect(() => {
-    if (!artist?.positions) {
-      router.replace("/mypage/profile");
-    }
-  }, [artist?.positions?.length]);
+
   return (
     artist?.positions && (
-      <div className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
+      <figure className="m-auto px-4 flex w-[min(28rem,100%)] h-[4.5rem] ">
         <Link href="mypage/profile">
           {artistLoading ? (
             <div className="bg-neutral-500 animate-pulse size-20 rounded-full"></div> // * 로딩중일때
@@ -34,7 +27,7 @@ export default function ProfileCard() {
             <Profile className="w-20 h-20" />
           )}
         </Link>
-        <div className="ml-4 flex flex-col justify-between ">
+        <figcaption className="ml-4 flex flex-col justify-between ">
           <h1 className="text-lg font-medium">
             <div>
               {artist?.displayName || "프로필을 업데이트해주세요"}
@@ -57,8 +50,8 @@ export default function ProfileCard() {
               </div>
             ) // * 이메일 인증이 안됐을때
           }
-        </div>
-      </div>
+        </figcaption>
+      </figure>
     )
   );
 }

@@ -13,7 +13,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
         className="lg:w-1/2 h-[calc(16rem+10vw)] lg:h-auto w-full object-cover"
         src={LoginImg}
         priority
-        alt=""
+        alt="login-img"
       />
     </div>
   );

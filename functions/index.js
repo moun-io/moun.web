@@ -18,22 +18,6 @@ exports.onCreateUser = functions.region("asia-northeast3")
         createdAt: new Date(Date.now()).toISOString(),
       });
     });
-// exports.onUpdateUser = functions.region("asia-northeast3")
-//     .auth.user()
-//     .onUpdate(async (change) => {
-//       logger.log(`User updated: ${user.uid}`);
-//       const user = change.after.data(); // 변경된 사용자 데이터
-//       const userEmailVerified = user.emailVerified; // 이메일 인증 상태// 사용자 UID
-//       if (userEmailVerified) {
-//       //* Create a new document in the "artists" collection
-//         await admin.firestore().collection("artists").doc(user.uid).set({
-//           displayName: (user.displayName || "음악팔이소녀"),
-//           email: user.email,
-//           photoURL: user.photoURL,
-//           createdAt: new Date(Date.now()).toISOString()로
-//         });
-//       }
-//     });
 
 exports.onDeleteUser = functions.region("asia-northeast3")
     .auth.user()
@@ -46,12 +30,13 @@ exports.onUpdateArtist = functions.region("asia-northeast3")
     .firestore.document("artists/{docId}")
     .onUpdate(async (change, context) => {
       logger.log(`User updated: ${context.params.docId}`);
+      // * Update 유저정보 in Firebase Auth
       const user = await admin.auth().updateUser(context.params.docId, {
         displayName: change.after.data().displayName,
         photoURL: change.after.data().photoURL,
       });
       if (user.emailVerified && !change.after.data().emailVerified) {
-        // * 연동이 안된경우 emailVerified 를 업데이트
+        // * 연동이 안된경우 emailVerified를 업데이트
         change.after.ref.update({
           emailVerified: true,
         });

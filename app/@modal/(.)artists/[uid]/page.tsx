@@ -11,7 +11,7 @@ export default function ArtistModal({ params }: { params: { uid: string } }) {
   return (
     artist && (
       <>
-        <div className="flex gap-8">
+        <figure className="flex gap-8">
           {isValidUrl(artist.photoURL) ? (
             <Image
               src={artist.photoURL as string}
@@ -23,7 +23,7 @@ export default function ArtistModal({ params }: { params: { uid: string } }) {
           ) : (
             <Profile className="size-20" />
           )}
-          <div className="flex flex-col gap-2">
+          <figcaption className="flex flex-col gap-2">
             <h2 className="H2 flex gap-2 items-center">
               {artist.displayName}
               {artist.verified && <Verified className="size-6" />}
@@ -40,14 +40,14 @@ export default function ArtistModal({ params }: { params: { uid: string } }) {
             <p className="text-neutral-400 text-sm min-w-72">
               {artist.description || "자기소개가 없습니다."}
             </p>
-          </div>
-        </div>
-        <div>
+          </figcaption>
+        </figure>
+        <section>
           <h3 className="font-bold">작품활동</h3>
-        </div>
-        <div>
+        </section>
+        <section>
           <h3 className="font-bold">SNS</h3>
-        </div>
+        </section>
       </>
     )
   );
