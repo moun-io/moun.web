@@ -28,10 +28,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-full">
-      <div className="bg-black">
+      <div className="bg-black w-full">
         <ImageSlider slides={slides} />
       </div>
-      <div className="Box Center flex-col py-16">{children}</div>
+      <div className="Box Center flex-col py-16 px-4 lg:px-0">{children}</div>
     </div>
   );
 }
