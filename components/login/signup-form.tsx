@@ -8,6 +8,7 @@ import {
 import { auth } from "@/lib/firebase/client";
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
+import SubmitButton from "./submit-button";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
@@ -99,7 +100,6 @@ export default function SignupForm() {
         placeholder="Password"
         setter={setPassword}
       />
-
       <LoginInput
         type="password"
         value={confirmPassword}
@@ -109,21 +109,11 @@ export default function SignupForm() {
       <label htmlFor="password" className="text-xs text-neutral-400 my-2">
         비밀번호는 숫자, 특수문자를 포함한 8자이상.
       </label>
-
-      {pending ? (
-        <div className="Center my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem]">
-          Loading...
-        </div>
-      ) : (
-        <button className="my-1 px-4 bg-gray-200/55 w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:bg-purple-500  hover:text-white transition hover:border-neutral-300">
-          회원가입
-        </button>
-      )}
-      {errorMsg && (
-        <div className="text-red-600 text-md my-2 animate-pulse ">
-          {errorMsg}
-        </div>
-      )}
+      <SubmitButton
+        errorMsg={errorMsg}
+        pending={pending}
+        text="회원가입"
+      ></SubmitButton>
     </form>
   );
 }

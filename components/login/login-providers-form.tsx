@@ -1,17 +1,17 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import GoogleLogo from "@/public/image/google-logo.png";
 import { loginWithGoogle } from "@/lib/firebase/auth";
 import KakaoLogo from "@/public/image/kakao-logo.png";
 import Image, { StaticImageData } from "next/image";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 export default function LoginProviderForm({
-  setErrorMsg,
   router,
 }: {
   setErrorMsg: Dispatch<SetStateAction<string>>;
   router: AppRouterInstance;
 }) {
+  const [errorMsg, setErrorMsg] = useState("");
   const onGoogleLogin = async () => {
     try {
       const credential = await loginWithGoogle();
@@ -57,6 +57,11 @@ export default function LoginProviderForm({
           <span>{element.title}</span>
         </div>
       ))}
+      {errorMsg && (
+        <div className="text-red-600 text-md my-2 animate-pulse ">
+          {errorMsg}
+        </div>
+      )}
     </>
   );
 }

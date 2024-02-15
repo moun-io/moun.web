@@ -11,13 +11,12 @@ import {
 
 export async function loginWithGoogle() {
   try {
-    const provider = new GoogleAuthProvider();
-    const Credential = await signInWithPopup(auth, provider);
+    const GoogleProvider = new GoogleAuthProvider();
+    const Credential = await signInWithPopup(auth, GoogleProvider);
     return Credential;
   } catch (error) {
     alert(error);
   }
-  // console.log(Credential);
 }
 export async function loginWithEmail(email: string, password: string) {
   try {

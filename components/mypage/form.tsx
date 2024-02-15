@@ -21,6 +21,10 @@ export function Box({
     </div>
   );
 }
+interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  placeholder: string;
+  name: string;
+}
 
 export function TextInput({
   placeholder,
@@ -29,14 +33,7 @@ export function TextInput({
   onChange,
   defaultValue,
   required = false,
-}: {
-  placeholder: string;
-  name: string;
-  value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  defaultValue?: string;
-  required?: boolean;
-}) {
+}: TextInputProps) {
   return (
     <input
       onChange={onChange}

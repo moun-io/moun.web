@@ -5,8 +5,15 @@ type LoginInputParameter = {
   type: string;
   setter: Dispatch<SetStateAction<string>>;
   placeholder: string;
+  defaultValue?: string;
 };
-function LoginInput({ value, type, setter, placeholder }: LoginInputParameter) {
+function LoginInput({
+  value,
+  type,
+  setter,
+  placeholder,
+  defaultValue,
+}: LoginInputParameter) {
   return (
     <input
       type={type}
@@ -15,6 +22,7 @@ function LoginInput({ value, type, setter, placeholder }: LoginInputParameter) {
       onChange={(e) => {
         setter(e.target.value);
       }}
+      defaultValue={defaultValue}
       required
       placeholder={placeholder}
       className="my-1 px-4 font-medium w-full h-12 rounded-lg border border-gray leading-[3rem] hover:shadow-md hover:border-neutral-300 "

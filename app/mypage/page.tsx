@@ -10,21 +10,21 @@ import ProfileCard from "@/components/mypage/profile-card";
 export default function Profile() {
   const list = [
     {
-      link: "mySong",
+      link: "/mySong",
       img: mySongs,
       title: "내 노래",
     },
     {
-      link: "myInfo",
+      link: "/mypage/account",
       img: myInfo,
       title: "계정정보",
     },
     {
-      link: "history",
+      link: "/history",
       img: history,
       title: "결제내역",
     },
-  ];
+  ] as const;
 
   return (
     <div className="flex-col w-full">
