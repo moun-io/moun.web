@@ -15,3 +15,4 @@ export interface ArtistForm {
   description: string;
   photoURL?: string;
 }
+export type Position = "Producer" | "Vocal" | "Rapper" | "Engineer" | "AnR";

@@ -7,9 +7,8 @@ import { useFormState } from "react-dom";
 import { useUser } from "@/lib/context/authProvider";
 import { sendEmailVerification } from "firebase/auth";
 import ImageInput from "@/components/mypage/image-input";
-
+import { Positions } from "@/lib/utils/const";
 export default function Profile() {
-  const Positions = ["Producer", "Vocal", "Rapper", "Engineer", "AnR"] as const;
   const { artist, user } = useUser();
   const [state, updateAction] = useFormState(onUpdateProfile, {
     message: "",

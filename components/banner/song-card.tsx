@@ -8,7 +8,7 @@ export default function SongCard({
 }) {
   return (
     <Link href="/">
-      <figure className="flex flex-col gap-4 ">
+      <figure className="flex flex-col  gap-4 ">
         {element.img ? (
           <Image
             className="w-full object-cover rounded-[clamp(0.5rem,calc(0.5rem+(1024px-100vw)*1/4),3.125rem)]"

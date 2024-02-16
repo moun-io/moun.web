@@ -5,17 +5,9 @@ import { useRef, useState } from "react";
 
 export default function ImageInput() {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const removeImage = (e: React.MouseEvent) => {
-    const ok = confirm("정말로 삭제하시겠습니까?");
-    if (ok) {
-      if (fileInputRef?.current?.value) {
-        setFileUrl(null);
-        fileInputRef.current.value = "";
-      }
-    }
-  };
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const onImageChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (file.size > 0) {
@@ -39,11 +31,21 @@ export default function ImageInput() {
       setFileUrl(null);
     }
   };
+  const onRemoveImage = (e: React.MouseEvent) => {
+    const ok = confirm("정말로 삭제하시겠습니까?");
+    if (ok) {
+      if (fileInputRef?.current?.value) {
+        setFileUrl(null);
+        fileInputRef.current.value = "";
+      }
+    }
+  };
   return (
     <>
+      {/* 삭제버튼 */}
       {fileUrl && (
         <div
-          onClick={removeImage}
+          onClick={onRemoveImage}
           className="relative Center top-80 h-0 cursor-pointer"
         >
           <svg
@@ -63,6 +65,7 @@ export default function ImageInput() {
         </div>
       )}
 
+      {/* 이미지 */}
       <div className="Center text-neutral-600">
         <label
           htmlFor="photo"
@@ -99,6 +102,7 @@ export default function ImageInput() {
           )}
         </label>
 
+        {/* 업로드 */}
         <input
           id="photo"
           name="photo"
@@ -106,7 +110,7 @@ export default function ImageInput() {
           accept="image/png, image/jpeg, image/jpg"
           hidden
           ref={fileInputRef}
-          onChange={handleImageChange}
+          onChange={onImageChange}
         />
       </div>
     </>
