@@ -1,10 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
-import LoginImg from "@/public/image/login-page.png";
 import LoginForm from "@/components/login/login-form";
-import { twMerge } from "tailwind-merge";
-import LoginProvidersForm from "@/components/login/login-providers-form";
-
+import { SignUpLink, ResetPasswordLink } from "@/components/login/links";
 export default function Login() {
   return (
     <>
@@ -14,26 +10,8 @@ export default function Login() {
       {/*  login */}
       <div className="w-[min(25rem,85%)] Center flex-col">
         <LoginForm>
-          <div className="text-sm text-neutral-400 my-2 ">
-            <strong className="font-medium">Moun</strong>이 처음이신가요?{" "}
-            <Link
-              href="/signup"
-              className="text-purple-400 underline hover:animate-pulse"
-            >
-              Sign up →
-            </Link>
-          </div>
-
-          <div className="text-sm text-neutral-400 ">
-            비밀번호를 잊어버리셨나요?{" "}
-            <Link
-              href="/reset-password"
-              className="text-purple-400 hover:animate-pulse underline"
-            >
-              {" "}
-              Reset Password →
-            </Link>
-          </div>
+          <SignUpLink />
+          <ResetPasswordLink />
           <div className=" text-neutral-400 w-full border-t-2 border-solid border-black-200 my-4"></div>
         </LoginForm>
       </div>

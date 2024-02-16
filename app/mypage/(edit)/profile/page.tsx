@@ -13,6 +13,18 @@ export default function Profile() {
   const [state, updateAction] = useFormState(onUpdateProfile, {
     message: "",
   });
+  const onSendEmail: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    if (user?.emailVerified === false)
+      sendEmailVerification(user).then(
+        () => {
+          alert("인증메일을 보냈습니다.");
+        },
+        () => {
+          alert("인증메일을 보내지 못했습니다.");
+        }
+      );
+  };
 
   if (user?.emailVerified)
     return (
@@ -84,20 +96,7 @@ export default function Profile() {
         <p className="text-xs text-neutral-600">
           이메일 인증을 위해 이메일을 확인해주세요.
         </p>
-        <button
-          className="underline text-blue-400"
-          onClick={(e) => {
-            e.preventDefault();
-            sendEmailVerification(user).then(
-              () => {
-                alert("인증메일을 보냈습니다.");
-              },
-              () => {
-                alert("인증메일을 보내지 못했습니다.");
-              }
-            );
-          }}
-        >
+        <button className="underline text-blue-400" onClick={onSendEmail}>
           이메일 다시 보내기
         </button>
       </div>
