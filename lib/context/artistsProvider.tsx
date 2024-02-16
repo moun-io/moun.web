@@ -15,8 +15,8 @@ type ArtistContextType = {
   artistsData: Artist[] | null;
   setArtistsData: Dispatch<SetStateAction<Artist[] | null>>;
   artistsLoading: boolean;
-  page: QueryDocumentSnapshot | undefined;
-  setPage: Dispatch<SetStateAction<QueryDocumentSnapshot | undefined>>;
+  page: QueryDocumentSnapshot | null;
+  setPage: Dispatch<SetStateAction<QueryDocumentSnapshot | null>>;
 };
 
 // Initialize context with undefined. This will be handled in the hook.
@@ -24,7 +24,7 @@ const ArtistContext = createContext<ArtistContextType | undefined>(undefined);
 
 export function ArtistProvider({ children }: { children: React.ReactNode }) {
   const [artistsData, setArtistsData] = useState<Artist[] | null>(null);
-  const [page, setPage] = useState<QueryDocumentSnapshot>();
+  const [page, setPage] = useState<QueryDocumentSnapshot | null>(null);
   const [artistsLoading, setArtistsLoading] = useState(true);
 
   const value = { artistsData, setArtistsData, artistsLoading, page, setPage };
