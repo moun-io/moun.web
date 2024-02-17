@@ -6,7 +6,12 @@
   --album-width: min(calc(9.5rem + 10vw), 17.5rem);
   --album-height: clamp(9.5rem, 100%, 15rem);
 }
-
+body {
+  scrollbar-width: none;
+}
+body::--webkit-scrollbar {
+  display: none;
+}
 li {
   list-style: none;
 }
