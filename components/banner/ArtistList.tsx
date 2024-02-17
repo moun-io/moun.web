@@ -9,7 +9,7 @@ import {
   startAfter,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Artist } from "@/lib/utils/types";
 import ArtistCard from "./ArtistCard";
 import { useInView } from "react-intersection-observer";
@@ -24,43 +24,49 @@ export default function ArtistList() {
   const { artistsData, setArtistsData, setPage, page } = useArtists();
   const [end, setEnd] = useState(false);
 
-  const fetchData = async () => {
-    if (end) return;
-
-    const artistsRef = collection(db, "artists");
-    const constraints = [
-      where("positions", "!=", false),
-      limit(10),
-      ...(page ? [startAfter(page)] : []),
-      ...(selected ? [where("positions", "array-contains", selected)] : []),
-    ];
-    const Query = query(artistsRef, ...constraints);
-    const querySnapshot = await getDocs(Query);
-    if (!querySnapshot.empty) {
-      const newArtists = querySnapshot.docs.map((doc) => ({
-        uid: doc.id,
-        ...(doc.data() as Artist),
-      }));
-      setArtistsData((prev) => [...(prev || []), ...newArtists]);
-      setPage(querySnapshot.docs[querySnapshot.docs.length - 1]);
-    } else {
-      setEnd(true);
+  //아티스트 데이터 가져오기
+  const fetchArtists = useCallback(async () => {
+    if (!inView || end) return;
+    try {
+      const artistsRef = collection(db, "artists");
+      const constraints = [
+        where("positions", "!=", false),
+        limit(10),
+        ...(page ? [startAfter(page)] : []),
+        ...(selected ? [where("positions", "array-contains", selected)] : []),
+      ];
+      const Query = query(artistsRef, ...constraints);
+      const querySnapshot = await getDocs(Query);
+      if (!querySnapshot.empty) {
+        const newArtists = querySnapshot.docs.map((doc) => ({
+          uid: doc.id,
+          ...(doc.data() as Artist),
+        }));
+        setPage(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setArtistsData((prev) => [...(prev ?? []), ...newArtists]);
+      } else {
+        setEnd(true);
+      }
+    } catch (error) {
+      alert(error);
     }
-  };
+  }, [end, page, inView, selected, setArtistsData, setPage]);
 
+  //무한 스크롤
   useEffect(() => {
     if (inView && !end) {
-      fetchData();
+      fetchArtists();
     }
-  }, [inView, end]);
+  }, [inView, end, fetchArtists]);
+  //포지션 선택시
   useEffect(() => {
     if (selected) {
       setArtistsData([]);
       setPage(null);
       setEnd(false);
-      fetchData();
+      fetchArtists();
     }
-  }, [selected]);
+  }, [selected, fetchArtists, setPage, setArtistsData]);
   return (
     <>
       <SortButton selected={selected} setSelected={setSelected} />

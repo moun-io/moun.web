@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import GoogleLogo from "@/public/image/google-logo.png";
 import { loginWithGoogle } from "@/lib/firebase/auth";
 import KakaoLogo from "@/public/image/kakao-logo.png";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 export default function LoginProviderForm({
   router,
