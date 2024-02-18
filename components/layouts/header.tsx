@@ -10,9 +10,9 @@ import Image from "next/image";
 import { useUser } from "@/lib/context/authProvider";
 import Profile from "../svg/profile";
 export default function Header({ children }: { children: React.ReactNode }) {
-  const [isMobile, setIsMobile] = useState(false);
+  // const [isMobile, setIsMobile] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
-
+  const Links = ["", "Songs", "Artists", "Released"] as const;
   const path = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -61,45 +61,30 @@ export default function Header({ children }: { children: React.ReactNode }) {
         <nav
           ref={navRef}
           className={twMerge(
-            "absolute transition pointer-events-none w-screen h-screen lg:flex text-white  bg-neutral-900/60 lg:bg-transparent lg:h-[4.5rem] text-base z-30 cursor-pointer",
+            "absolute transition lg:pointer-events-none w-screen h-screen lg:flex text-white  bg-neutral-900/60 lg:bg-transparent lg:h-[4.5rem] text-base z-30 cursor-pointer",
             isOpened ? "" : "hidden"
           )}
           onClick={toggle}
         >
-          <ol className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0">
-            <li
-              className={twMerge(
-                "lg:hidden",
-                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path === "/" && "text-purple-400"
-              )}
-            >
-              <Link href="/">Home</Link>
-            </li>
-            <li
-              className={twMerge(
-                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path.includes("/songs") && "text-purple-400"
-              )}
-            >
-              <Link href="/songs">Songs</Link>
-            </li>
-            <li
-              className={twMerge(
-                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path.includes("/artists") && "text-purple-400"
-              )}
-            >
-              <Link href="/artists">Artists</Link>
-            </li>
-            <li
-              className={twMerge(
-                "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
-                path.includes("/released") && "text-purple-400"
-              )}
-            >
-              <Link href="/released">Released</Link>
-            </li>
+          <ol
+            className="gap-16 Center w-full lg:flex-row flex-col bg-neutral-900 lg:bg-transparent py-10 lg:p-0 cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {Links.map((link, idx) => (
+              <li
+                className={twMerge(
+                  "transition hover:text-purple-400 hover:animate-pulse pointer-events-auto",
+                  link
+                    ? path.includes(`/${link.toLowerCase()}`) &&
+                        "text-purple-400"
+                    : path === "/" && "text-purple-400",
+                  link || "lg:hidden" // * Home은 모바일에서만 보임
+                )}
+                key={idx}
+              >
+                <Link href={"/" + link.toLowerCase()}>{link || "Home"}</Link>
+              </li>
+            ))}
           </ol>
         </nav>
       </header>
