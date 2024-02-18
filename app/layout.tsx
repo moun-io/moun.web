@@ -9,6 +9,8 @@ import { ArtistProvider } from "@/lib/context/artistsProvider";
 export const metadata: Metadata = {
   title: "Moun",
   description: "프로 작곡가의 시작 , Moun",
+  
+
 };
 
 export default async function RootLayout({

@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 function Spinner({ end }: { end: boolean }, ref: React.Ref<HTMLDivElement>) {
   return (
     <>
-      {end || (
+      {!end && (
         <div role="status" ref={ref} className="Center col-span-full">
           <svg
             aria-hidden="true"
