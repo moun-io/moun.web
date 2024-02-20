@@ -19,7 +19,7 @@ import Spinner from "./spinner";
 import SortButtonsList from "./sort-buttons-list";
 import { Positions } from "@/lib/utils/const";
 import { Position } from "@/lib/utils/types";
-export default function ArtistTable() {
+export default function ArtistBoard() {
   const [part, setPart] = useState<string | null>(null);
   const [team, setTeam] = useState<string | null>(null);
   const [orderBy, setOrderBy] = useState<string | null>(null);

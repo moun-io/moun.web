@@ -10,7 +10,6 @@ import Image from "next/image";
 import { useUser } from "@/lib/context/authProvider";
 import Profile from "../svg/profile";
 export default function Header({ children }: { children: React.ReactNode }) {
-  // const [isMobile, setIsMobile] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const Links = ["", "Songs", "Artists", "Released"] as const;
   const path = usePathname();
