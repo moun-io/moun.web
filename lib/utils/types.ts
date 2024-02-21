@@ -32,6 +32,7 @@ export type Genre =
   | "Others";
 
 export class Song {
+  // private songId: string,
   constructor(
     public image: StaticImageData | string,
     public title: string,
