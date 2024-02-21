@@ -4,13 +4,12 @@ import "./globals.css";
 import Footer from "@/components/layouts/footer";
 import Header from "@/components/layouts/header";
 import AuthProvider from "@/lib/context/authProvider";
+
 const inter = Inter({ subsets: ["latin"] });
 import { ArtistProvider } from "@/lib/context/artistsProvider";
 export const metadata: Metadata = {
   title: "Moun",
   description: "프로 작곡가의 시작 , Moun",
-  
-
 };
 
 export default async function RootLayout({
