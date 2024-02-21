@@ -6,14 +6,34 @@ import Spinner from "./spinner";
 import { useInView } from "react-intersection-observer";
 import SongTrackCard from "./song-track-card";
 import { Song } from "@/lib/utils/types";
-
+import Album from "@/public/image/home/rectangle-54.jpg";
 export default function SongsList() {
   const [genre, setGenre] = useState<string | null>(null);
   const [end, setEnd] = useState(false);
   const [ref, inView] = useInView({ threshold: 0 });
   const Songs: Song[] = [
-    new Song("title", "artist", "POP", "image", "audio", "uid", 0, 0, 0),
-    new Song("title", "artist", "POP", "image", "audio", "uid", 0, 0, 0),
+    new Song(
+      Album,
+      "21",
+      "Dean",
+      ["Trap", "Ballad"],
+      "3:32",
+      "audio",
+      40,
+      2000,
+      0
+    ),
+    new Song(
+      Album,
+      "Butter",
+      "BTS",
+      ["POP", "Ballad"],
+      "2:22",
+      "audio",
+      40,
+      200,
+      0
+    ),
   ];
 
   return (
@@ -27,27 +47,29 @@ export default function SongsList() {
         />
       </div>
       <table className="flex flex-col mt-4">
-        <tr className="flex text-neutral-500 font-medium items-center">
+        <tr className="flex text-neutral-400 items-center">
           <th className="p-4 flex-none">#</th>
           <th className="p-4 flex-none">곡정보</th>
-          <th className="flex-auto">재생시간</th>
+          <th className="flex-auto hidden md:block">재생시간</th>
           <th className="flex-1">현재가 / 바로구매가</th>
-          <th>남은시간</th>
+          <th className="hidden sm:block">남은시간</th>
         </tr>
 
-        {/* {Songs.map((song, index) => (
+        {Songs.map((song, index) => (
           <SongTrackCard
             key={index}
+            index={index}
+            image={song.image}
             title={song.title}
             artist={song.artist}
             genre={song.genre}
-            image={song.image}
-            audio={song.audio}
             length={song.length}
-            timeleft={song.timeleft}
-            price_now={song.price_now}
+            audio={song.audio}
+            currentPrice={song.currentPrice}
+            buyPrice={song.buyPrice}
+            remainingTime={song.remainingTime}
           />
-        ))} */}
+        ))}
         <Spinner end={end} ref={ref} />
       </table>
     </div>

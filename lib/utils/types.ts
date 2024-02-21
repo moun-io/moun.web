@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 export interface Artist {
   displayName: string;
   positions: string[];
@@ -31,15 +33,16 @@ export type Genre =
 
 export class Song {
   constructor(
+    public image: StaticImageData | string,
     public title: string,
     public artist: string,
-    public genre: Genre,
-    public image: string,
-    public audio: string,
+    public genre: Genre[],
     public length: string,
-    public createdAt: number,
-    public timeleft: number,
-    public price_now: number
+    public audio: string,
+    public currentPrice: number,
+    public buyPrice: number,
+    public remainingTime: number,
+    public index: number = 0
   ) {
     this.artist = artist;
     this.title = title;
@@ -47,8 +50,9 @@ export class Song {
     this.image = image;
     this.audio = audio;
     this.length = length;
-    this.createdAt = createdAt;
-    this.timeleft = timeleft;
-    this.price_now = price_now;
+    this.remainingTime = remainingTime;
+    this.currentPrice = currentPrice;
+    this.buyPrice = buyPrice;
+    this.index = index;
   }
 }
