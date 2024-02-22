@@ -1,14 +1,24 @@
 import { StaticImageData } from "next/image";
 
-export interface Artist {
-  displayName: string;
-  positions: string[];
-  sns: string;
-  description: string;
-  uid?: string;
-  email: string;
-  photoURL?: string;
-  verified?: boolean;
+export class Artist {
+  constructor(
+    public displayName: string,
+    public positions: Position[],
+    public sns: string,
+    public description: string,
+    public email: string,
+    public photoURL?: string,
+    public verified?: boolean,
+    public uid?: string
+  ) {
+    this.displayName = displayName;
+    this.positions = positions;
+    this.sns = sns;
+    this.description = description;
+    this.uid = uid;
+    this.email = email;
+    this.photoURL = photoURL;
+  }
 }
 export interface ArtistForm {
   displayName: string;
