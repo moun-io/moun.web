@@ -29,10 +29,12 @@ export default function ProfileCard() {
         </Link>
         <figcaption className="ml-4 flex flex-col justify-between ">
           <h1 className="text-lg font-medium">
-            <div>
+            <div className="flex items-center gap-1">
               {artist?.displayName || "프로필을 업데이트해주세요"}
               <strong>
-                {artist?.verified && <Verified className="size-6 inline" />}
+                {artist?.verified && (
+                  <Verified className="size-6 align-middle" />
+                )}
               </strong>
             </div>
             {/* <div className="text-xs text-neutral-400">{artist?.positions}</div> */}

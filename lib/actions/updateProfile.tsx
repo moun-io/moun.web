@@ -36,7 +36,10 @@ export async function onUpdateProfile(
     //* 이미지 업로드
     if (file.size > 0) {
       //*파일이 있을 때만 업로드
-      if (file.size < 10000000 && file.type === ("image/png" || "image/jpg")) {
+      if (
+        file.size < 10000000 && //10MB
+        ["image/png", "image/jpg", "image/jpeg"].includes(file.type)
+      ) {
         try {
           const fileRef = await storage
             .bucket("moun-df9ff.appspot.com")
@@ -53,6 +56,8 @@ export async function onUpdateProfile(
           console.log(error);
         }
       } else {
+        console.log(file.type);
+
         return {
           message: "10MB이하의 PNG/JPG 파일을 올려주세요. ",
         };
