@@ -8,6 +8,7 @@ export const Positions = [
 export const Genre = [
   "Ballad",
   "Boombap",
+  "R&B",
   "EDM",
   "Indie",
   "Idol",

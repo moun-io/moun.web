@@ -10,7 +10,7 @@ export function Box({
   required?: boolean;
 }) {
   return (
-    <div className="w-full border-neutral-300 border-solid border rounded-2xl p-6">
+    <div className=" w-full border-neutral-300 border-solid border rounded-2xl p-6">
       <label className="block font-bold">
         {label} {required && <p className="inline"> * </p>}
       </label>
@@ -45,5 +45,40 @@ export function TextInput({
       defaultValue={defaultValue}
       required={required}
     />
+  );
+}
+
+export function SelectInput({
+  array,
+  defaultChecked,
+  legend,
+}: {
+  array: readonly string[];
+  defaultChecked: string[] | undefined;
+  legend: string;
+}) {
+  return (
+    <fieldset className="flex flex-wrap gap-4">
+      <legend hidden>{legend}</legend>
+      {array.map((element, idx) => (
+        <div key={idx}>
+          <input
+            id={element}
+            type="checkbox"
+            name={element}
+            className="peer hidden"
+            defaultChecked={defaultChecked?.includes(element) || false}
+          />
+          <label
+            htmlFor={element}
+            className={
+              "border p-3 block peer-checked:bg-purple-500 peer-checked:text-white text-sm text-neutral-500 rounded-2xl hover:border-purple-500 hover:text-purple-500 transition"
+            }
+          >
+            {element}
+          </label>
+        </div>
+      ))}
+    </fieldset>
   );
 }

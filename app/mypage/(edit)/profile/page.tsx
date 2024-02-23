@@ -2,7 +2,7 @@
 import React from "react";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
 import SubmitButton from "@/components/mypage/submit-button";
-import { Box, TextInput } from "@/components/mypage/form";
+import { Box, TextInput, SelectInput } from "@/components/mypage/form";
 import { useFormState } from "react-dom";
 import { useUser } from "@/lib/context/authProvider";
 import { sendEmailVerification } from "firebase/auth";
@@ -38,7 +38,7 @@ export default function Profile() {
           />
         </Box>
         <Box label="포지션" required>
-          <fieldset className="flex flex-wrap gap-4">
+          {/* <fieldset className="flex flex-wrap gap-4">
             <legend hidden>Choose your Positions</legend>
             {Positions.map((element, idx) => (
               <div key={idx}>
@@ -59,7 +59,12 @@ export default function Profile() {
                 </label>
               </div>
             ))}
-          </fieldset>
+          </fieldset> */}
+          <SelectInput
+            array={Positions}
+            defaultChecked={artist?.positions}
+            legend="Choose your Positions"
+          />
         </Box>
         <Box label="SNS" description="매력을 어필할 SNS 계정을 연결해주세요">
           <TextInput
