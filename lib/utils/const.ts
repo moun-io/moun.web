@@ -5,7 +5,7 @@ export const Positions = [
   "Engineer",
   "AnR",
 ] as const;
-export const Genre = [
+export const Genres = [
   "Ballad",
   "Boombap",
   "R&B",
@@ -18,4 +18,24 @@ export const Genre = [
   "Trap",
   "UK Garage",
   "Others",
+] as const;
+export const Vibes = [
+  "Lovely",
+  "Exciting",
+  "Emotional",
+  "Melancholic",
+  "Upbeat",
+  "Calm",
+  "Powerful",
+  "Romantic",
+  "Mysterious",
+  "Comfortable",
+  "Glamorous",
+  "Groovy",
+  "Intense",
+  "Dreamy",
+  "Retro",
+  "Sentimental",
+  "Symphonic",
+  "Futuristic",
 ] as const;

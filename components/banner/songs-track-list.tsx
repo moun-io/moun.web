@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import SortButton from "./sort-button";
-import { Genre } from "@/lib/utils/const";
+import { Genres } from "@/lib/utils/const";
 import Spinner from "./spinner";
 import { useInView } from "react-intersection-observer";
 import SongTrackCard from "./song-track-card";
@@ -42,7 +42,7 @@ export default function SongsList() {
         <SortButton
           selected={genre}
           setSelected={setGenre}
-          data={Genre}
+          data={Genres}
           defaultName="Genre"
         />
       </div>

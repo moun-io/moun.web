@@ -38,28 +38,6 @@ export default function Profile() {
           />
         </Box>
         <Box label="포지션" required>
-          {/* <fieldset className="flex flex-wrap gap-4">
-            <legend hidden>Choose your Positions</legend>
-            {Positions.map((element, idx) => (
-              <div key={idx}>
-                <input
-                  id={element}
-                  type="checkbox"
-                  name={element}
-                  className="peer hidden"
-                  defaultChecked={artist?.positions?.includes(element) || false}
-                />
-                <label
-                  htmlFor={element}
-                  className={
-                    "border p-3 block peer-checked:bg-purple-500 peer-checked:text-white text-sm text-neutral-500 rounded-2xl hover:border-purple-500 hover:text-purple-500 transition"
-                  }
-                >
-                  {element}
-                </label>
-              </div>
-            ))}
-          </fieldset> */}
           <SelectInput
             array={Positions}
             defaultChecked={artist?.positions}

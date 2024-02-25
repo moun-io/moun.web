@@ -1,5 +1,5 @@
 import { StaticImageData } from "next/image";
-
+import { Genres, Positions } from "./const";
 export class Artist {
   constructor(
     public displayName: string,
@@ -27,19 +27,8 @@ export interface ArtistForm {
   description: string;
   photoURL?: string;
 }
-export type Position = "Producer" | "Vocal" | "Rapper" | "Engineer" | "AnR";
-export type Genre =
-  | "Ballad"
-  | "Boombap"
-  | "EDM"
-  | "Indie"
-  | "Idol"
-  | "POP"
-  | "Rock"
-  | "Sub Culture"
-  | "Trap"
-  | "UK Garage"
-  | "Others";
+export type Position = (typeof Positions)[number];
+export type Genre = (typeof Genres)[number];
 
 export class Song {
   // private songId: string,
