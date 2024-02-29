@@ -6,19 +6,12 @@ import { verifyToken } from "@/lib/firebase/verifyToken";
 import { getDownloadURL } from "firebase-admin/storage";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
 import { ArtistForm } from "@/lib/utils/types";
+import { Positions } from "@/lib/utils/const";
 
 export async function onUpdateProfile(
   prevState: { message: string },
   formData: FormData
 ) {
-  // await new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     console.log("waiting");
-
-  //     resolve("resolved");
-  //   }, 2000);
-  // });
-
   const token = cookies().get("__token");
   if (!token) return redirect("/login");
   const decodedToken = await verifyToken(token.value);
@@ -57,32 +50,28 @@ export async function onUpdateProfile(
         }
       } else {
         console.log(file.type);
-
         return {
           message: "10MB이하의 PNG/JPG 파일을 올려주세요. ",
         };
       }
     }
-
+    const PositionsSelected = [];
+    for (const position of Positions) {
+      if (formData.get(position)) {
+        PositionsSelected.push(position);
+      }
+    }
     const data: ArtistForm = {
       displayName: formData.get("name") as string,
-      positions: [
-        formData.get("Rapper") ? "Rapper" : null,
-        formData.get("Vocal") ? "Vocal" : null,
-        formData.get("Producer") ? "Producer" : null,
-        formData.get("Engineer") ? "Engineer" : null,
-        formData.get("AnR") ? "AnR" : null,
-      ].filter((position) => position !== null) as string[],
+      positions: PositionsSelected,
       sns: formData.get("sns") as string,
       description: formData.get("description") as string,
       ...(photoURL && isValidUrl(photoURL) && { photoURL: photoURL }),
     };
     if (data.displayName.length < 2)
       return { message: "2자 이상의 활동명을 입력해주세요" };
-
     if (data.positions.length === 0)
       return { message: "포지션을 선택해주세요" };
-
     try {
       await db
         .collection("artists")

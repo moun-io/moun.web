@@ -1,5 +1,4 @@
-import { StaticImageData } from "next/image";
-import { Genres, Positions } from "./const";
+import { Genres, Positions, Vibes } from "./const";
 export class Artist {
   constructor(
     public displayName: string,
@@ -27,32 +26,34 @@ export interface ArtistForm {
   description: string;
   photoURL?: string;
 }
-export type Position = (typeof Positions)[number];
-export type Genre = (typeof Genres)[number];
-
 export class Song {
   // private songId: string,
   constructor(
-    public image: StaticImageData | string,
+    public image: File,
     public title: string,
     public artist: string,
-    public genre: Genre[],
+    public genres: Genre[],
+    public vibes: Vibe[],
     public length: string,
-    public audio: string,
+    public audio: File,
     public currentPrice: number,
     public buyPrice: number,
-    public remainingTime: number,
+    public expireDate: string,
     public index: number = 0
   ) {
     this.artist = artist;
     this.title = title;
-    this.genre = genre;
+    this.genres = genres;
+    this.vibes = vibes;
     this.image = image;
     this.audio = audio;
     this.length = length;
-    this.remainingTime = remainingTime;
+    this.expireDate = expireDate;
     this.currentPrice = currentPrice;
     this.buyPrice = buyPrice;
     this.index = index;
   }
 }
+export type Position = (typeof Positions)[number];
+export type Genre = (typeof Genres)[number];
+export type Vibe = (typeof Vibes)[number];

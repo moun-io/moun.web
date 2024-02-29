@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
-import SongUploadForm from "@/components/mypage/upload";
+import { useRouter, usePathname } from "next/navigation";
+import uploadSong from "@/lib/actions/uploadSong";
+import SongUploadForm from "@/components/mypage/song-upload-form";
 export default function Upload() {
   const [step, setStep] = useState(1);
   const [price, setPrice] = useState([200, 2000]);
@@ -17,13 +18,13 @@ export default function Upload() {
     setStep((step) => (step > 1 ? step - 1 : 1));
   };
   const onSubmit: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    console.log("submit");
+    confirm("작성을 완료하시겠습니까?") || e.preventDefault();
   };
   const onCancel: React.MouseEventHandler = (e) => {
     e.preventDefault();
-    router.back();
+    confirm("작성을 취소하시겠습니까?") && router.back();
   };
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -36,24 +37,24 @@ export default function Upload() {
         </div>
         {Title(step)}
       </h2>
-      <form action="">
+      <form action={uploadSong}>
         <SongUploadForm step={step} price={price} setPrice={setPrice} />
-      </form>
 
-      <div className="flex gap-2 p-8">
-        <button
-          className="text-center p-4 flex-1 bg-neutral-200 rounded-xl"
-          onClick={step === 1 ? onCancel : prevStep}
-        >
-          {step === 1 ? "Cancel" : "Back"}
-        </button>
-        <button
-          className="text-center p-4 flex-1 bg-fuchsia-500 text-white rounded-xl"
-          onClick={step < 3 ? nextStep : onSubmit}
-        >
-          {step === 3 ? "Confirm" : "Next"}
-        </button>
-      </div>
+        <div className="flex gap-2 p-8">
+          <button
+            className="text-center p-4 flex-1 bg-neutral-200 rounded-xl"
+            onClick={step === 1 ? onCancel : prevStep}
+          >
+            {step === 1 ? "Cancel" : "Back"}
+          </button>
+          <button
+            className="text-center p-4 flex-1 bg-fuchsia-500 text-white rounded-xl"
+            onClick={step < 3 ? nextStep : onSubmit}
+          >
+            {step === 3 ? "Confirm" : "Next"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
