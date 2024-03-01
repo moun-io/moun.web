@@ -1,11 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Box, TextInput, SelectInput } from "@/components/mypage/form";
+import {
+  Box,
+  TextInput,
+  SelectInput,
+  UserInput,
+} from "@/components/mypage/form";
 import { Slider, Switch } from "@nextui-org/react";
 import ImageInput from "@/components/mypage/image-input";
 import FileUpload from "@/components/svg/fileUpload";
 import { Genres, Vibes } from "@/lib/utils/const";
+import { useUser } from "@/lib/context/authProvider";
+
+function formatDate(date: Date): string {
+  let year = date.getFullYear();
+  let month: string | number = date.getMonth() + 1; // getMonth() is zero-based, add 1 to get the correct month number
+  let day: string | number = date.getDate();
+
+  // Pad the month and day with a leading zero if they are less than 10
+  month = month < 10 ? `0${month}` : month;
+  day = day < 10 ? `0${day}` : day;
+
+  return `${year}-${month}-${day}`;
+}
 export default function SongUploadForm({
   step,
   price,
@@ -15,18 +33,8 @@ export default function SongUploadForm({
   price: number[];
   setPrice: (value: number[]) => void;
 }) {
+  const { user } = useUser();
   const [audio, setAudio] = useState<File | null>(null);
-  function formatDate(date: Date): string {
-    let year = date.getFullYear();
-    let month: string | number = date.getMonth() + 1; // getMonth() is zero-based, add 1 to get the correct month number
-    let day: string | number = date.getDate();
-
-    // Pad the month and day with a leading zero if they are less than 10
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-
-    return `${year}-${month}-${day}`;
-  }
 
   const today = new Date();
   const threeDaysLater = new Date(today);
@@ -59,6 +67,7 @@ export default function SongUploadForm({
 
   return (
     <>
+      <UserInput user={user} />
       <div style={{ display: step === 1 ? "flex" : "none" }}>
         <input
           type="file"

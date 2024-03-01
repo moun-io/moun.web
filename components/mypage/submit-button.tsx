@@ -7,9 +7,6 @@ export default function SubmitButton({ errorMsg }: { errorMsg: string }) {
   const { user } = useUser();
   return (
     <>
-      {user && (
-        <input hidden type="text" name="userId" value={user.uid} readOnly />
-      )}
       {pending ? (
         <div className="Center rounded-xl text-neutral-500 bg-neutral-300 p-4">
           Loading...

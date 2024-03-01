@@ -1,3 +1,5 @@
+import { User } from "firebase/auth";
+
 export function Box({
   children,
   label,
@@ -80,5 +82,10 @@ export function SelectInput({
         </div>
       ))}
     </fieldset>
+  );
+}
+export function UserInput({ user }: { user: User | null }) {
+  return (
+    user && <input hidden type="text" name="userId" value={user.uid} readOnly />
   );
 }

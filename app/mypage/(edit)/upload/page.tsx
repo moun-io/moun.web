@@ -2,13 +2,17 @@
 import React, { useEffect, useState } from "react";
 
 import { useRouter, usePathname } from "next/navigation";
-import uploadSong from "@/lib/actions/uploadSong";
+import onUploadSong from "@/lib/actions/uploadSong";
+
 import SongUploadForm from "@/components/mypage/song-upload-form";
+import { useFormState } from "react-dom";
 export default function Upload() {
   const [step, setStep] = useState(1);
   const [price, setPrice] = useState([200, 2000]);
   const router = useRouter();
-
+  const [state, uploadAction] = useFormState(onUploadSong, {
+    message: "",
+  });
   const nextStep: React.MouseEventHandler = (e) => {
     e.preventDefault();
     setStep((step) => (step < 3 ? step + 1 : 3));
@@ -37,7 +41,7 @@ export default function Upload() {
         </div>
         {Title(step)}
       </h2>
-      <form action={uploadSong}>
+      <form action={uploadAction}>
         <SongUploadForm step={step} price={price} setPrice={setPrice} />
 
         <div className="flex gap-2 p-8">
@@ -53,6 +57,7 @@ export default function Upload() {
           >
             {step === 3 ? "Confirm" : "Next"}
           </button>
+          {state?.message}
         </div>
       </form>
     </div>

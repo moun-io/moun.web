@@ -29,29 +29,27 @@ export interface ArtistForm {
 export class Song {
   // private songId: string,
   constructor(
-    public image: File,
+    public audioURL: string,
+    public photoURL: string,
     public title: string,
-    public artist: string,
+    public uid: string,
+    public length: string,
     public genres: Genre[],
     public vibes: Vibe[],
-    public length: string,
-    public audio: File,
     public currentPrice: number,
     public buyPrice: number,
-    public expireDate: string,
-    public index: number = 0
+    public expireDate: string
   ) {
-    this.artist = artist;
+    this.uid = uid;
     this.title = title;
     this.genres = genres;
     this.vibes = vibes;
-    this.image = image;
-    this.audio = audio;
+    this.audioURL = audioURL;
+    this.photoURL = photoURL;
     this.length = length;
     this.expireDate = expireDate;
     this.currentPrice = currentPrice;
     this.buyPrice = buyPrice;
-    this.index = index;
   }
 }
 export type Position = (typeof Positions)[number];
