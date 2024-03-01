@@ -38,3 +38,10 @@ header .active {
 .CenterPosition {
   @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
+
+/* audio::-webkit-media-controls {
+  background-color: aliceblue;
+}
+
+audio::-webkit-media-controls-play-button {
+} */

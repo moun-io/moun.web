@@ -35,7 +35,7 @@ export default function SongUploadForm({
 }) {
   const { user } = useUser();
   const [audio, setAudio] = useState<File | null>(null);
-
+  const [audioUrl, setAudioUrl] = useState<string>("");
   const today = new Date();
   const threeDaysLater = new Date(today);
   const twoWeeksLater = new Date(today);
@@ -49,6 +49,7 @@ export default function SongUploadForm({
       if (file.type === "audio/mp3" || file.type === "audio/mpeg") {
         if (file.size < 10000000 && file.size > 0) {
           setAudio(file);
+          setAudioUrl(URL.createObjectURL(file));
           return;
         } else {
           setAudio(null);
@@ -68,7 +69,7 @@ export default function SongUploadForm({
   return (
     <>
       <UserInput user={user} />
-      <div style={{ display: step === 1 ? "flex" : "none" }}>
+      <div style={{ display: step === 1 ? "block" : "none" }}>
         <input
           type="file"
           name="audio"
@@ -85,10 +86,52 @@ export default function SongUploadForm({
 
           {audio ? audio.name : <div>MP3 형식의 파일을 올려주세요.</div>}
         </label>
+        {audioUrl && (
+          <audio controls src={audioUrl} className="block w-full"></audio>
+        )}
       </div>
       <div
         className="flex flex-col gap-8"
         style={{ display: step === 2 ? "flex" : "none" }}
+      >
+        <Box required label="노래 제목">
+          <TextInput required placeholder="노래 제목 입력" name="title" />
+        </Box>
+        <Box
+          label="커버 이미지 업로드"
+          description="매력적인 이미지가 있으면 경매 입찰 수가 50% 늘어나요"
+        >
+          <ImageInput />
+        </Box>
+        <Box
+          required
+          label="노래 설명"
+          description="노래에 대한 설명을 적어주세요."
+        >
+          <TextInput
+            required
+            placeholder="노래에 대한 설명을 적어주세요."
+            name="description"
+          />
+        </Box>
+        <Box label="장르 선택">
+          <SelectInput
+            legend="Choose the Genre of the song"
+            array={Genres}
+            defaultChecked={undefined}
+          />
+        </Box>
+        <Box label="바이브 선택">
+          <SelectInput
+            legend="Choose the Vibe of the song"
+            array={Vibes}
+            defaultChecked={undefined}
+          />
+        </Box>
+      </div>
+      <div
+        className="flex flex-col gap-8"
+        style={{ display: step === 3 ? "flex" : "none" }}
       >
         <Box
           label="입찰가 설정"
@@ -152,45 +195,6 @@ export default function SongUploadForm({
               className="bg-neutral-100 p-4 flex-none rounded-lg cursor-pointer hover:bg-neutral-200 transition text-black"
             />
           </div>
-        </Box>
-      </div>
-      <div
-        className="flex flex-col gap-8"
-        style={{ display: step === 3 ? "flex" : "none" }}
-      >
-        <Box required label="노래 제목">
-          <TextInput required placeholder="노래 제목 입력" name="title" />
-        </Box>
-        <Box
-          label="커버 이미지 업로드"
-          description="매력적인 이미지가 있으면 경매 입찰 수가 50% 늘어나요"
-        >
-          <ImageInput />
-        </Box>
-        <Box
-          required
-          label="노래 설명"
-          description="노래에 대한 설명을 적어주세요."
-        >
-          <TextInput
-            required
-            placeholder="노래에 대한 설명을 적어주세요."
-            name="description"
-          />
-        </Box>
-        <Box label="장르 선택">
-          <SelectInput
-            legend="Choose the Genre of the song"
-            array={Genres}
-            defaultChecked={undefined}
-          />
-        </Box>
-        <Box label="바이브 선택">
-          <SelectInput
-            legend="Choose the Vibe of the song"
-            array={Vibes}
-            defaultChecked={undefined}
-          />
         </Box>
       </div>
     </>
