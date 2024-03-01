@@ -2,12 +2,10 @@
 import { Song, Genre, Vibe } from "@/lib/utils/types";
 import { Genres, Vibes } from "@/lib/utils/const";
 import { verifyId } from "@/lib/actions/verify-id";
-import { redirect } from "next/navigation";
 import ArrayFilter from "@/lib/utils/array-filter";
 import { db, storage } from "../firebase/server";
 import { getDownloadURL } from "firebase-admin/storage";
-import { doc } from "firebase/firestore";
-
+import { redirect } from "next/navigation";
 export default async function onUploadSong(
   prevState: { message: string },
   formData: FormData
@@ -115,4 +113,5 @@ export default async function onUploadSong(
       message: "이미지 업로드에 실패했습니다. 다시 시도해주세요.",
     };
   }
+  redirect("/mypage");
 }

@@ -25,7 +25,7 @@ export default function SongsList() {
   const [ref, inView] = useInView({ threshold: 0 });
   const [page, setPage] = useState<any>();
 
-  const [songs, setSongs] = useState<Song[]>([]);
+  const [songs, setSongs] = useState<(Song & { songId: string })[]>([]);
 
   const fetchSongs = useCallback(async () => {
     if (end) {
