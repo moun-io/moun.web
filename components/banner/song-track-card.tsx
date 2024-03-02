@@ -5,6 +5,7 @@ import Link from "next/link";
 import { isValidUrl } from "@/lib/utils/isValidUrl";
 export default function SongTrackCard({
   index,
+  audioURL,
   songId,
   title,
   uid,
@@ -15,6 +16,8 @@ export default function SongTrackCard({
   buyPrice,
   expireDate,
 }: Song & { index: number; songId: string }) {
+  console.log(audioURL);
+
   return (
     <ol className="flex items-center my-8">
       <li className="p-4 flex-none">{index + 1}</li>
@@ -48,7 +51,9 @@ export default function SongTrackCard({
       </li>
       <li className="flex-auto hidden md:flex gap-8">
         <div>{length}</div>
-        <div>waveform</div>
+        <div>
+          <audio controls src={audioURL}></audio>
+        </div>
       </li>
       <li className="flex-auto">
         $ {currentPrice} / $ {buyPrice}

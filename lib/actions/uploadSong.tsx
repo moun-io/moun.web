@@ -20,11 +20,9 @@ export default async function onUploadSong(
   const selectedGenres = ArrayFilter(Genres, formData) as Genre[];
   const selectedVibes = ArrayFilter(Vibes, formData) as Vibe[];
   let docRef;
-  let photoURL: string = "";
   const photoFile = formData.get("photo") as File;
   const audioFile = formData.get("audio") as File;
-  let audioURL = "";
-  const audioBuffer = await photoFile.arrayBuffer();
+  const audioBuffer = await audioFile.arrayBuffer();
   const photoBuffer = await photoFile.arrayBuffer();
   const song = new Song(
     "",
@@ -75,17 +73,17 @@ export default async function onUploadSong(
   }
 
   try {
-    const fileRef = await storage
+    const audioFileRef = await storage
       .bucket("moun-df9ff.appspot.com")
       .file(`songs/${docRef.id}/song`);
-    console.log("fileRef", fileRef);
-    await fileRef.save(Buffer.from(audioBuffer), {
+    console.log("fileRef", audioFileRef);
+    await audioFileRef.save(Buffer.from(audioBuffer), {
       contentType: audioFile.type,
       metadata: {
         cacheControl: "public, max-age=31536000",
       },
     });
-    audioURL = await getDownloadURL(fileRef);
+    const audioURL = await getDownloadURL(audioFileRef);
     await docRef.update({ audioURL });
   } catch (error) {
     await docRef.delete();
@@ -105,7 +103,7 @@ export default async function onUploadSong(
         cacheControl: "public, max-age=31536000",
       },
     });
-    photoURL = await getDownloadURL(fileRef);
+    const photoURL = await getDownloadURL(fileRef);
     await docRef.update({ photoURL });
   } catch (error) {
     await docRef.delete();

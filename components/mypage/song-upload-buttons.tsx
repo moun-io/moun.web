@@ -36,19 +36,19 @@ export default function Buttons({
         {step === 1 ? "Cancel" : "Back"}
       </button>
       {pending ? (
+        <div
+          onClick={(e) => e.preventDefault()}
+          className="text-center flex-1 rounded-xl text-neutral-500 bg-neutral-300 p-4"
+        >
+          Loading...
+        </div>
+      ) : (
         <button
           className="text-center p-4 flex-1 bg-fuchsia-500 text-white rounded-xl"
           onClick={step < 3 ? nextStep : onSubmit}
         >
           {step === 3 ? "Confirm" : "Next"}
         </button>
-      ) : (
-        <div
-          onClick={(e) => e.preventDefault()}
-          className="Center rounded-xl text-neutral-500 bg-neutral-300 p-4"
-        >
-          Loading...
-        </div>
       )}
 
       {state?.message}
