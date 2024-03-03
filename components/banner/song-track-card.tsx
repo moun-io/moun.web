@@ -3,6 +3,8 @@ import { Song } from "@/lib/utils/types";
 import Image from "next/image";
 import Link from "next/link";
 import { isValidUrl } from "@/lib/utils/isValid";
+
+import WaveForm from "@/components/banner/waveform";
 export default function SongTrackCard({
   index,
   audioURL,
@@ -16,17 +18,11 @@ export default function SongTrackCard({
   buyPrice,
   expireDate,
 }: Song & { index: number; songId: string }) {
-  console.log(audioURL);
-
-  console.log("expireDate", expireDate);
-
   const endDate = new Date(expireDate);
   const startDate = new Date();
-  console.log(startDate);
 
   const diff = endDate.getTime() - startDate.getTime();
   const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-  console.log(diffDays);
 
   return (
     <ol className="flex items-center my-8">
@@ -61,9 +57,7 @@ export default function SongTrackCard({
       </li>
       <li className="flex-auto hidden md:flex gap-8">
         <div>{length}</div>
-        <div>
-          <audio controls src={audioURL}></audio>
-        </div>
+        <div>{audioURL && <WaveForm url={audioURL}></WaveForm>}</div>
       </li>
       <li className="flex-auto">
         $ {currentPrice} / $ {buyPrice}
