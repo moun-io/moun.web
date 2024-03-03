@@ -2,8 +2,14 @@
 import React, { useState } from "react";
 import { Slider } from "@nextui-org/react";
 
-export default function PriceSet() {
-  const [price, setPrice] = useState(0) as any;
+export default function PriceSet({
+  minValue,
+  maxValue,
+}: {
+  minValue: number;
+  maxValue: number;
+}) {
+  const [price, setPrice] = useState(minValue) as any;
   return (
     <>
       <h3 className="text-[2.5rem] font-bold">$ {price}</h3>
@@ -12,19 +18,19 @@ export default function PriceSet() {
           key="success"
           color="success"
           step={1}
-          minValue={20}
-          maxValue={2000}
+          minValue={minValue}
+          maxValue={maxValue}
           value={price}
           aria-label="Temperature"
           onChange={setPrice}
         ></Slider>
         <div className="flex justify-between">
           <div>
-            <div>20$</div>
+            <div>{minValue}$</div>
             <div>시작가</div>
           </div>
           <div className="text-end">
-            <div>2000$</div>
+            <div>{maxValue}$</div>
             <div>바로구매가</div>
           </div>
         </div>

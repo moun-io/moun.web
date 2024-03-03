@@ -1,4 +1,4 @@
-import { isValidUrl } from "@/lib/utils/isValidUrl";
+import { isValidUrl } from "@/lib/utils/isValid";
 import Image from "next/image";
 import Link from "next/link";
 import Profile from "../svg/profile";

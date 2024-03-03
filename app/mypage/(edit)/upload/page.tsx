@@ -38,10 +38,10 @@ function Title(page: number) {
       return "노래 파일을 업로드 해주세요";
       break;
     case 2:
-      return "경매 정보를 입력해주세요";
+      return "곡 정보를 입력해주세요";
       break;
     case 3:
-      return "곡 정보를 입력해주세요";
+      return "경매 정보를 입력해주세요";
       break;
   }
 }

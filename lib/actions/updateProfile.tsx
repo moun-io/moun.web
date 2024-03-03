@@ -3,7 +3,7 @@ import { db, storage } from "../firebase/server";
 import { redirect } from "next/navigation";
 import { getDownloadURL } from "firebase-admin/storage";
 import { Position } from "@/lib/utils/types";
-import { isValidUrl } from "@/lib/utils/isValidUrl";
+import { isValidUrl } from "@/lib/utils/isValid";
 import { ArtistForm } from "@/lib/utils/types";
 import { Positions } from "@/lib/utils/const";
 import ArrayFilter from "@/lib/utils/array-filter";

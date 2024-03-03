@@ -1,4 +1,8 @@
 import { Genres, Positions, Vibes } from "./const";
+
+export type YYYYMMDD =
+  `${string}${string}${string}${string}-${string}${string}-${string}${string}`;
+export type HHMM = `${string}${string}:${string}${string}`;
 export class Artist {
   constructor(
     public displayName: string,
@@ -38,7 +42,8 @@ export class Song {
     public vibes: Vibe[],
     public currentPrice: number,
     public buyPrice: number,
-    public expireDate: string
+    public expireDate: YYYYMMDD,
+    public expireTime: HHMM
   ) {
     this.uid = uid;
     this.title = title;
@@ -50,6 +55,7 @@ export class Song {
     this.expireDate = expireDate;
     this.currentPrice = currentPrice;
     this.buyPrice = buyPrice;
+    this.expireTime = expireTime;
   }
 }
 export type Position = (typeof Positions)[number];

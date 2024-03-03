@@ -1,11 +1,12 @@
 "use server";
-import { Song, Genre, Vibe } from "@/lib/utils/types";
+import { Song, Genre, Vibe, YYYYMMDD, HHMM } from "@/lib/utils/types";
 import { Genres, Vibes } from "@/lib/utils/const";
 import { verifyId } from "@/lib/actions/verify-id";
 import ArrayFilter from "@/lib/utils/array-filter";
 import { db, storage } from "../firebase/server";
 import { getDownloadURL } from "firebase-admin/storage";
 import { redirect } from "next/navigation";
+import { isValidDate, isValidTime } from "../utils/isValid";
 export default async function onUploadSong(
   prevState: { message: string },
   formData: FormData
@@ -16,6 +17,13 @@ export default async function onUploadSong(
       message: "로그인이 필요합니다.",
     };
   }
+  console.log(formData.get("expireDate"), formData.get("expireTime"));
+
+  if (
+    !isValidDate(formData.get("expireDate") as string) ||
+    !isValidTime(formData.get("expireTime") as string)
+  )
+    return { message: "날짜를 올바르게 입력해주세요." };
 
   const selectedGenres = ArrayFilter(Genres, formData) as Genre[];
   const selectedVibes = ArrayFilter(Vibes, formData) as Vibe[];
@@ -34,7 +42,8 @@ export default async function onUploadSong(
     selectedVibes,
     parseInt(formData.get("currentPrice") as string),
     parseInt(formData.get("buyPrice") as string),
-    formData.get("expireDate") as string
+    formData.get("expireDate") as YYYYMMDD,
+    formData.get("expireTime") as HHMM
   );
   if (
     !(

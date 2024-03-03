@@ -2,7 +2,7 @@ import React from "react";
 import { Song } from "@/lib/utils/types";
 import Image from "next/image";
 import Link from "next/link";
-import { isValidUrl } from "@/lib/utils/isValidUrl";
+import { isValidUrl } from "@/lib/utils/isValid";
 export default function SongTrackCard({
   index,
   audioURL,
@@ -17,6 +17,16 @@ export default function SongTrackCard({
   expireDate,
 }: Song & { index: number; songId: string }) {
   console.log(audioURL);
+
+  console.log("expireDate", expireDate);
+
+  const endDate = new Date(expireDate);
+  const startDate = new Date();
+  console.log(startDate);
+
+  const diff = endDate.getTime() - startDate.getTime();
+  const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+  console.log(diffDays);
 
   return (
     <ol className="flex items-center my-8">
@@ -58,7 +68,7 @@ export default function SongTrackCard({
       <li className="flex-auto">
         $ {currentPrice} / $ {buyPrice}
       </li>
-      <li className="flex-none hidden sm:block">D-{expireDate}</li>
+      <li className="flex-none hidden sm:block">D-{diffDays}</li>
     </ol>
   );
 }

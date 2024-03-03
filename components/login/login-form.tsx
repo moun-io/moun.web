@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import LoginInput from "./login-input";
 import LoginProvidersForm from "./login-providers-form";
 import SubmitButton from "./submit-button";
+import { useUser } from "@/lib/context/authProvider";
 export default function LoginForm({ children }: { children: React.ReactNode }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false); // [1
+  const { user } = useUser();
   const router = useRouter();
 
   const onEmailLogin: React.FormEventHandler = async (e) => {
@@ -34,6 +36,11 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
       setEmail(email);
     }
   }, []);
+  useEffect(() => {
+    if (user) {
+      router.replace("/mypage");
+    }
+  }, [user, router]);
   return (
     <>
       <form onSubmit={onEmailLogin} className="w-full Center flex-col">
