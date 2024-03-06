@@ -103,9 +103,9 @@ export default function SongTrackCard({
           </figcaption>
         </Link>
       </li>
-      <li className="flex-auto hidden md:flex gap-8 items-center">
+      <li className="flex-auto hidden md:flex gap-8 items-center mx-8">
         <div>{length}</div>
-        <div>
+        <div className="w-full">
           {audioURL && (
             <WaveForm
               url={audioURL}

@@ -35,21 +35,56 @@ export default function SongDetail({ params }: { params: { songId: string } }) {
 
   return (
     <>
-      <section className="bg-gradient-to-t from-neutral-700 to-white lg:bg-none flex flex-col justify-between items-center lg:items-start gap-4 lg:w-1/2 w-full">
-        <div>
+      <section className="bg-gradient-to-t from-neutral-700 to-white lg:bg-none flex flex-col justify-between items-center lg:items-start gap-4 lg:w-1/2 w-full selection:bg-transparent">
+        <div className="flex flex-col items-center lg:block">
           <div className="mt-16 lg:mt-0 text-lg text-neutral-500">
             {song?.uid}
           </div>
           <h1 className=" font-bold text-[2.5rem]">{song?.title}</h1>
         </div>
-        {song && (
-          <WaveForm
-            url={song.audioURL}
-            play={play}
-            setPlay={setPlay}
-            songId={params.songId}
-          />
-        )}
+        <div className="Center gap-4 w-full">
+          {play ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-20 h-20 cursor-pointer transition"
+              onClick={() => setPlay(null)}
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM9 8.25a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75h.75a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75H9Zm5.25 0a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75H15a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75h-.75Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-20 h-20 cursor-pointer "
+              onClick={() => setPlay(params.songId)}
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
+
+          {song && (
+            <div className="w-full">
+              <WaveForm
+                url={song.audioURL}
+                play={play}
+                setPlay={setPlay}
+                songId={params.songId}
+                large
+              />
+            </div>
+          )}
+        </div>
 
         <div className="hidden lg:block"></div>
         {song && (

@@ -1,6 +1,6 @@
 "use client";
 import React, { use, useEffect, useRef, useState } from "react";
-import { useWavesurfer } from "@wavesurfer/react";
+
 import WaveSurfer from "wavesurfer.js";
 
 export default function WaveForm({
@@ -8,11 +8,13 @@ export default function WaveForm({
   songId,
   play,
   setPlay,
+  large = false,
 }: {
   url: string;
   play: string | null;
   songId: string;
   setPlay: any;
+  large?: boolean;
 }) {
   const waveFormRef = useRef(null);
 
@@ -24,15 +26,15 @@ export default function WaveForm({
     // Create a WaveSurfer instance and pass the media element
     wavesurfer.current = WaveSurfer.create({
       container: waveFormRef.current,
-      waveColor: "black",
-      progressColor: "purple",
+      waveColor: "#D9D9D9",
+      progressColor: "#292929",
       url: url,
+
       cursorWidth: 0,
       height: 50,
       barHeight: 0.7,
-      barWidth: 0.5,
+      barWidth: 1,
       barGap: 1,
-      width: 300,
     });
     wavesurfer.current.on("click", () => {
       if (wavesurfer.current) setPlay(songId);
