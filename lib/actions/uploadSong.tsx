@@ -1,5 +1,5 @@
 "use server";
-import { Song, Genre, Vibe, YYYYMMDD, HHMM } from "@/lib/utils/types";
+import { Song, Genre, Vibe, YYYYMMDD, HHMM, Length } from "@/lib/utils/types";
 import { Genres, Vibes } from "@/lib/utils/const";
 import { verifyId } from "@/lib/actions/verify-id";
 import ArrayFilter from "@/lib/utils/array-filter";
@@ -32,12 +32,20 @@ export default async function onUploadSong(
   const audioFile = formData.get("audio") as File;
   const audioBuffer = await audioFile.arrayBuffer();
   const photoBuffer = await photoFile.arrayBuffer();
+
+  const length = parseInt(formData.get("length") as string);
+  const lengthMin = Math.floor(length / 60)
+    .toString()
+    .padStart(2, "0");
+  const lengthSec = length % 60;
+  const lengthString: Length = `${lengthMin}:${lengthSec}`;
+
   const song = new Song(
     "",
     "",
     formData.get("title") as string,
     formData.get("userId") as string,
-    formData.get("length") as string,
+    lengthString,
     selectedGenres,
     selectedVibes,
     parseInt(formData.get("currentPrice") as string),

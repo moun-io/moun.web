@@ -1,7 +1,7 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-
+import WaveForm from "@/components/banner/waveform";
 import Album from "@/public/image/home/rectangle-54.jpg";
 import { Song } from "@/lib/utils/types";
 import Tag from "@/public/image/song/tag.png";
@@ -17,6 +17,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 
 export default function SongDetail({ params }: { params: { songId: string } }) {
+  const [play, setPlay] = useState<string | null>(null);
   const fetchSong = useCallback(async () => {
     console.log("fetchSong");
 
@@ -41,10 +42,16 @@ export default function SongDetail({ params }: { params: { songId: string } }) {
           </div>
           <h1 className=" font-bold text-[2.5rem]">{song?.title}</h1>
         </div>
+        {song && (
+          <WaveForm
+            url={song.audioURL}
+            play={play}
+            setPlay={setPlay}
+            songId={params.songId}
+          />
+        )}
 
-        <div className="hidden lg:block">
-          <audio controls src={song?.audioURL}></audio>
-        </div>
+        <div className="hidden lg:block"></div>
         {song && (
           <Image
             className="size-80 my-12 lg:m-0 lg:w-full lg:h-auto aspect-square lg:rounded-xl rounded-none"

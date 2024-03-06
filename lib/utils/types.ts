@@ -3,6 +3,7 @@ import { Genres, Positions, Vibes } from "./const";
 export type YYYYMMDD =
   `${string}${string}${string}${string}-${string}${string}-${string}${string}`;
 export type HHMM = `${string}${string}:${string}${string}`;
+export type Length = `${string}${string}:${string}${string}`;
 export class Artist {
   constructor(
     public displayName: string,
@@ -37,7 +38,7 @@ export class Song {
     public photoURL: string,
     public title: string,
     public uid: string,
-    public length: string,
+    public length: Length,
     public genres: Genre[],
     public vibes: Vibe[],
     public currentPrice: number,

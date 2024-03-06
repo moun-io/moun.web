@@ -24,6 +24,7 @@ export default function SongsList() {
   const [end, setEnd] = useState(false);
   const [ref, inView] = useInView({ threshold: 0 });
   const [page, setPage] = useState<any>();
+  const [play, setPlay] = useState<string | null>(null);
 
   const [songs, setSongs] = useState<(Song & { songId: string })[]>([]);
 
@@ -93,7 +94,13 @@ export default function SongsList() {
         </ol>
 
         {songs.map((song, index) => (
-          <SongTrackCard key={index} index={index} {...song} />
+          <SongTrackCard
+            key={index}
+            index={index}
+            {...song}
+            play={play}
+            setPlay={setPlay}
+          />
         ))}
         <Spinner end={end} ref={ref} />
       </div>
