@@ -17,7 +17,7 @@ export default async function onUploadSong(
       message: "로그인이 필요합니다.",
     };
   }
-  console.log(formData.get("expireDate"), formData.get("expireTime"));
+  // console.log(formData.get("expireDate"), formData.get("expireTime"));
 
   if (
     !isValidDate(formData.get("expireDate") as string) ||
@@ -25,8 +25,28 @@ export default async function onUploadSong(
   )
     return { message: "날짜를 올바르게 입력해주세요." };
 
+  if (
+    formData.get("currentPrice") === null ||
+    formData.get("buyPrice") === null
+  )
+    return { message: "가격을 입력해주세요." };
+  if (formData.get("currentPrice") === formData.get("buyPrice"))
+    return { message: "판매가와 즉시 구매가는 같을 수 없습니다." };
+  if (parseInt(formData.get("currentPrice") as string) < 0)
+    return { message: "가격은 0원 이상이어야 합니다." };
+  if (formData.get("title") === null)
+    return { message: "제목을 입력해주세요." };
+  if (formData.get("photo") === null)
+    return { message: "이미지를 업로드해주세요." };
+
+  if (formData.get("audio") === null)
+    return { message: "음악 파일을 업로드해주세요." };
+
   const selectedGenres = ArrayFilter(Genres, formData) as Genre[];
   const selectedVibes = ArrayFilter(Vibes, formData) as Vibe[];
+
+  if (selectedGenres.length === 0 || selectedVibes.length === 0)
+    return { message: "1가지 이상의 장르와 분위기를 선택해주세요." };
   let docRef;
   const photoFile = formData.get("photo") as File;
   const audioFile = formData.get("audio") as File;
@@ -34,6 +54,7 @@ export default async function onUploadSong(
   const photoBuffer = await photoFile.arrayBuffer();
 
   const length = parseInt(formData.get("length") as string);
+  if (!length) return { message: "음악 길이를 입력해주세요." };
   const lengthMin = Math.floor(length / 60)
     .toString()
     .padStart(2, "0");
@@ -44,6 +65,7 @@ export default async function onUploadSong(
     "",
     "",
     formData.get("title") as string,
+    formData.get("description") as string,
     formData.get("userId") as string,
     lengthString,
     selectedGenres,
@@ -80,20 +102,13 @@ export default async function onUploadSong(
       .collection("songs")
       .add({ ...song })
       .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
+        // console.log("Document written with ID: ", docRef.id);
         return docRef;
       });
-  } catch (error) {
-    return {
-      message: "업로드에 실패했습니다. 다시 시도해주세요.",
-    };
-  }
-
-  try {
     const audioFileRef = await storage
       .bucket("moun-df9ff.appspot.com")
       .file(`songs/${docRef.id}/song`);
-    console.log("fileRef", audioFileRef);
+    // console.log("fileRef", audioFileRef);
     await audioFileRef.save(Buffer.from(audioBuffer), {
       contentType: audioFile.type,
       metadata: {
@@ -103,9 +118,9 @@ export default async function onUploadSong(
     const audioURL = await getDownloadURL(audioFileRef);
     await docRef.update({ audioURL });
   } catch (error) {
-    await docRef.delete();
+    if (docRef) await docRef.delete();
     return {
-      message: "업로드에 실패했습니다. 다시 시도해주세요.",
+      message: "노래 업로드에 실패했습니다. 다시 시도해주세요.",
     };
   }
 
@@ -113,7 +128,7 @@ export default async function onUploadSong(
     const fileRef = await storage
       .bucket("moun-df9ff.appspot.com")
       .file(`songs/${docRef.id}/album`);
-    console.log("fileRef", fileRef);
+    // console.log("fileRef", fileRef);
     await fileRef.save(Buffer.from(photoBuffer), {
       contentType: photoFile.type,
       metadata: {

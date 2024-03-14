@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import FileUpload from "../svg/fileUpload";
+import FileUpload from "../../svg/fileUpload";
 export default function ImageInput() {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

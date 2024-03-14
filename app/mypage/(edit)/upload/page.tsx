@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import onUploadSong from "@/lib/actions/uploadSong";
-import Buttons from "@/components/mypage/song-upload-buttons";
-import SongUploadForm from "@/components/mypage/song-upload-form";
+import SongUploadForm from "@/components/mypage/form/song-upload-form";
 import { useFormState } from "react-dom";
 export default function Upload() {
   const [step, setStep] = useState(1);
-  const [price, setPrice] = useState([200, 2000]);
+
   const [state, uploadAction] = useFormState(onUploadSong, {
     message: "",
   });
@@ -25,8 +24,7 @@ export default function Upload() {
         {Title(step)}
       </h2>
       <form action={uploadAction}>
-        <SongUploadForm step={step} price={price} setPrice={setPrice} />
-        <Buttons step={step} setStep={setStep} state={state}></Buttons>
+        <SongUploadForm step={step} setStep={setStep} state={state} />
       </form>
     </div>
   );

@@ -1,17 +1,17 @@
 "use client";
 import React from "react";
 import { onUpdateProfile } from "@/lib/actions/updateProfile";
-import SubmitButton from "@/components/mypage/submit-button";
+import SubmitButton from "@/components/mypage/form/submit-button";
 import {
   Box,
   TextInput,
   SelectInput,
   UserInput,
-} from "@/components/mypage/form";
+} from "@/components/mypage/form/form";
 import { useFormState } from "react-dom";
 import { useUser } from "@/lib/context/authProvider";
 import { sendEmailVerification } from "firebase/auth";
-import ImageInput from "@/components/mypage/image-input";
+import ImageInput from "@/components/mypage/form/image-input";
 import { Positions } from "@/lib/utils/const";
 
 export default function Profile() {

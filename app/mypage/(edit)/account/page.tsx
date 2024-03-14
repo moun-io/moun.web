@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Box } from "@/components/mypage/form";
+import { TextInput, Box } from "@/components/mypage/form/form";
 export default function Account() {
   return (
     <div>

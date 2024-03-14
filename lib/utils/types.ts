@@ -37,6 +37,7 @@ export class Song {
     public audioURL: string,
     public photoURL: string,
     public title: string,
+    public description: string,
     public uid: string,
     public length: Length,
     public genres: Genre[],
@@ -50,6 +51,7 @@ export class Song {
     this.title = title;
     this.genres = genres;
     this.vibes = vibes;
+    this.description = description;
     this.audioURL = audioURL;
     this.photoURL = photoURL;
     this.length = length;

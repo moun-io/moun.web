@@ -13,9 +13,9 @@ export function Box({
 }) {
   return (
     <div className=" w-full border-neutral-300 border-solid border rounded-2xl p-6">
-      <label className="block font-bold">
+      <div className="block font-bold">
         {label} {required && <p className="inline"> * </p>}
-      </label>
+      </div>
       {description && (
         <div className="text-neutral-400 text-sm mt-4">{description}</div>
       )}
