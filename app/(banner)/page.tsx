@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import CardsList from "@/components/banner/song-cards-list";
+import SongCardsList from "@/components/banner/song-cards-list";
 import SmallBanner from "@/components/banner/small-banner";
 
 export default function Home() {
@@ -29,7 +29,7 @@ function CardsContainer({ title, href }: { title: string; href: string }) {
           </Link>
         </h2>
       </div>
-      <CardsList />
+      <SongCardsList />
     </section>
   );
 }
