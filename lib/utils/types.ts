@@ -34,9 +34,10 @@ export interface ArtistForm {
 export class Song {
   // private songId: string,
   constructor(
+    public title: string,
     public audioURL: string,
     public photoURL: string,
-    public title: string,
+
     public description: string,
     public uid: string,
     public length: Length,
