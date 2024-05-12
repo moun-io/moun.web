@@ -1,16 +1,17 @@
 import { Length, YYYYMMDD, HHMM, Genre, Vibe } from "../utils/types";
 import { Genres, Vibes } from "@/lib/utils/const";
-import { verifyId } from "@/lib/actions/verify-id";
 import ArrayFilter from "@/lib/utils/array-filter";
 import { db, storage } from "../firebase/server";
 import { getDownloadURL } from "firebase-admin/storage";
-import { redirect } from "next/navigation";
 import { isValidDate, isValidTime } from "../utils/isValid";
+import { uploadable } from "../class/interface";
+import { doc } from "firebase/firestore";
 export class SongDoc {
   title: string;
   audioURL: string;
   photoURL: string;
   description: string;
+  songId: string;
   uid: string;
   length: Length;
   genres: Genre[];
@@ -40,12 +41,13 @@ export class SongDoc {
     this.buyPrice = parseInt(formData.get("buyPrice") as string);
     this.expireDate = formData.get("expireDate") as YYYYMMDD;
     this.expireTime = formData.get("expireTime") as HHMM;
+    this.songId = "";
   }
   getPlainObject() {
     return {
+      title: this.title,
       audioURL: this.audioURL,
       photoURL: this.photoURL,
-      title: this.title,
       description: this.description,
       uid: this.uid,
       length: this.length,
@@ -57,9 +59,19 @@ export class SongDoc {
       expireTime: this.expireTime,
     };
   }
+  protected async uploadDoc() {
+    try {
+      const docRef = await db.collection("songs").add(this.getPlainObject());
+      await docRef.update({ songId: docRef.id }); //songId를 docId로 설정
+      return docRef;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 }
 
-export class Song extends SongDoc {
+export class Song extends SongDoc implements uploadable {
   audio: File;
   photo: File;
   constructor(formData: FormData) {
@@ -105,27 +117,23 @@ export class Song extends SongDoc {
       return {
         message: "10MB 이하의 PNG/JPG 파일을 올려주세요.",
       };
-    return null;
+    return false;
   }
-  async getAudioPhotoBuffer() {
+  public async upload() {
+    const errorMsg = this.isValidForm();
+    if (errorMsg) return errorMsg;
+    const docRef = await this.uploadDoc();
+    if (!docRef)
+      return { message: "데이터 업로드에 실패했습니다. 다시 시도해주세요." };
+    const songErrorMsg = await this.uploadSong(docRef);
+    if (songErrorMsg) return songErrorMsg;
+    const photoErrorMsg = await this.uploadPhoto(docRef);
+    if (photoErrorMsg) return photoErrorMsg;
+    return false;
+  }
+
+  private async uploadSong(docRef: FirebaseFirestore.DocumentReference) {
     const audioBuffer = await this.audio.arrayBuffer();
-    const photoBuffer = await this.photo.arrayBuffer();
-    return [audioBuffer, photoBuffer];
-  }
-
-  async uploadDocument() {
-    const docRef = await db
-      .collection("songs")
-      .add(this.getPlainObject())
-      .then((docRef) => {
-        return docRef;
-      });
-    return docRef;
-  }
-
-  async uploadSong(docRef: FirebaseFirestore.DocumentReference) {
-    const audioBuffer = await this.audio.arrayBuffer();
-
     try {
       const audioFileRef = await storage
         .bucket("moun-df9ff.appspot.com")
@@ -139,7 +147,7 @@ export class Song extends SongDoc {
       });
       const audioURL = await getDownloadURL(audioFileRef);
       await docRef.update({ audioURL });
-      return null;
+      return false;
     } catch (error) {
       console.log(error);
       if (docRef) await docRef.delete();
@@ -147,8 +155,9 @@ export class Song extends SongDoc {
         message: "음악 업로드에 실패했습니다. 다시 시도해주세요.",
       };
     }
+    return false;
   }
-  async uploadPhoto(docRef: FirebaseFirestore.DocumentReference) {
+  private async uploadPhoto(docRef: FirebaseFirestore.DocumentReference) {
     const photoBuffer = await this.photo.arrayBuffer();
     try {
       const fileRef = await storage
@@ -163,7 +172,7 @@ export class Song extends SongDoc {
       });
       const photoURL = await getDownloadURL(fileRef);
       await docRef.update({ photoURL });
-      return null;
+      return false;
     } catch (error) {
       await docRef.delete();
       return {
