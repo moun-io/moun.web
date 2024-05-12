@@ -6,22 +6,8 @@ import { getDownloadURL } from "firebase-admin/storage";
 import { isValidDate, isValidTime } from "../utils/isValid";
 import { uploadable } from "../class/interface";
 import { doc } from "firebase/firestore";
-export type SongType = {
-  title: string;
-  audioURL: string;
-  photoURL: string;
-  description: string;
-  songId: string;
-  uid: string;
-  length: Length;
-  genres: Genre[];
-  vibes: Vibe[];
-  currentPrice: number;
-  buyPrice: number;
-  expireDate: YYYYMMDD;
-  expireTime: HHMM;
-};
-export class SongDoc implements SongType {
+
+export class SongDoc {
   title: string;
   audioURL: string;
   photoURL: string;
@@ -78,7 +64,7 @@ export class SongDoc implements SongType {
       expireTime: this.expireTime,
     };
   }
-  private async uploadDoc() {
+  protected async uploadDoc() {
     try {
       const docRef = await db.collection("songs").add(this.getPlainObject());
       await docRef.update({ songId: docRef.id }); //songId를 docId로 설정

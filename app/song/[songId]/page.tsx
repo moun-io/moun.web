@@ -2,7 +2,7 @@
 import Image, { StaticImageData } from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import WaveForm from "@/components/banner/waveform";
-import { Song } from "@/lib/utils/types";
+import { Song } from "@/lib/class/song-client";
 import Tag from "@/public/image/song/tag.png";
 import Coin from "@/public/image/song/coin.png";
 import Time from "@/public/image/song/time.png";
@@ -17,6 +17,7 @@ import { db } from "@/lib/firebase/client";
 
 export default function SongDetail({ params }: { params: { songId: string } }) {
   const [play, setPlay] = useState<string | null>(null);
+  const [song, setSong] = useState<Song>();
   const fetchSong = useCallback(async () => {
     console.log("fetchSong");
 
@@ -24,10 +25,10 @@ export default function SongDetail({ params }: { params: { songId: string } }) {
     const songSnap = await getDoc(songRef);
     if (songSnap.exists()) {
       console.log(songSnap.data());
-      setSong(songSnap.data() as Song);
+      setSong(new Song(songSnap.data()));
     }
   }, [params.songId]);
-  const [song, setSong] = useState<Song | null>(null);
+
   useEffect(() => {
     fetchSong();
   }, [fetchSong]);
@@ -109,24 +110,14 @@ export default function SongDetail({ params }: { params: { songId: string } }) {
             )}
           </Box>
           <Box title="경매 정보">
-            <Element src={Time}>{song?.expireDate}일 남음</Element>
+            <Element src={Time}>{song?.getDateDiff()}일 남음</Element>
             <Element src={Coin}>저작권 양도 O</Element>
             <Element src={Tag}>14건 입찰</Element>
           </Box>
           <Box title="곡 정보">
             <Element src={PlayList}>{song?.length}</Element>
-            <Element src={Music}>
-              {song?.genres.map(
-                (genre, index) =>
-                  `#${genre}${index === song?.genres.length - 1 ? "" : " "}`
-              )}
-            </Element>
-            <Element src={Heart}>
-              {song?.vibes.map(
-                (vibe, index) =>
-                  `#${vibe}${index === song?.vibes.length - 1 ? "" : " "}`
-              )}
-            </Element>
+            <Element src={Music}>{song?.getGenres()}</Element>
+            <Element src={Heart}>{song?.getVibes()}</Element>
           </Box>
         </section>
       </div>

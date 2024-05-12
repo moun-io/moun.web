@@ -43,4 +43,15 @@ export class Song {
     let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
     return diffDays;
   }
+  getGenres() {
+    return this.genres.map(
+      (genre, index) =>
+        `#${genre}${index === this.genres.length - 1 ? "" : " "}`
+    );
+  }
+  getVibes() {
+    return this.vibes.map(
+      (vibe, index) => `#${vibe}${index === this.vibes.length - 1 ? "" : " "}`
+    );
+  }
 }
