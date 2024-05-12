@@ -6,22 +6,11 @@ import { isValidDate, isValidTime } from "../utils/isValid";
 import { uploadable } from "./interface";
 import { doc } from "firebase/firestore";
 import { QueryDocumentSnapshot, DocumentData } from "@firebase/firestore-types";
+import { SongSuper } from "../utils/types";
 
-export class Song {
-  title: string;
-  audioURL: string;
-  photoURL: string;
-  description: string;
-  songId: string;
-  uid: string;
-  length: Length;
-  genres: Genre[];
-  vibes: Vibe[];
-  currentPrice: number;
-  buyPrice: number;
-  expireDate: YYYYMMDD;
-  expireTime: HHMM;
+export class Song extends SongSuper {
   constructor(data: DocumentData) {
+    super();
     this.title = data.title;
     this.audioURL = data.audioURL;
     this.photoURL = data.photoURL;

@@ -1,4 +1,9 @@
 "use client";
+/**
+ * @fileoverview This file is a context provider for the artists data.
+ * @note This file is a context provider for the artists data.
+
+ */
 
 import React, {
   Dispatch,

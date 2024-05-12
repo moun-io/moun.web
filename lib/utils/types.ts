@@ -31,21 +31,23 @@ export interface ArtistForm {
   description: string;
   photoURL?: string;
 }
-export type SongType = {
-  title: string;
-  audioURL: string;
-  photoURL: string;
-  description: string;
-  songId: string;
-  uid: string;
-  length: Length;
-  genres: Genre[];
-  vibes: Vibe[];
-  currentPrice: number;
-  buyPrice: number;
-  expireDate: YYYYMMDD;
-  expireTime: HHMM;
-};
+export abstract class SongSuper {
+  title: string = "";
+  audioURL: string = "";
+  photoURL: string = "";
+  description: string = "";
+  songId: string = "";
+  uid: string = "";
+  length: Length = "00:00";
+  genres: Genre[] = [];
+  vibes: Vibe[] = [];
+  currentPrice: number = 0;
+  buyPrice: number = 0;
+  expireDate: YYYYMMDD = "0000-00-00";
+  expireTime: HHMM = "00:00";
+  createdAt?: Date;
+}
+
 export type Position = (typeof Positions)[number];
 export type Genre = (typeof Genres)[number];
 export type Vibe = (typeof Vibes)[number];

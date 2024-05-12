@@ -6,24 +6,11 @@ import { getDownloadURL } from "firebase-admin/storage";
 import { isValidDate, isValidTime } from "../utils/isValid";
 import { uploadable } from "../class/interface";
 import { doc } from "firebase/firestore";
+import { SongSuper } from "@/lib/utils/types";
 
-export class SongDoc {
-  title: string;
-  audioURL: string;
-  photoURL: string;
-  description: string;
-  songId: string;
-  uid: string;
-  length: Length;
-  genres: Genre[];
-  vibes: Vibe[];
-  currentPrice: number;
-  buyPrice: number;
-  expireDate: YYYYMMDD;
-  expireTime: HHMM;
-
+export class SongDoc extends SongSuper {
   constructor(formData: FormData) {
-    // if (formData) {
+    super();
     const selectedGenres = ArrayFilter(Genres, formData) as Genre[];
     const selectedVibes = ArrayFilter(Vibes, formData) as Vibe[];
     this.audioURL = "";
@@ -44,7 +31,6 @@ export class SongDoc {
     this.expireDate = formData.get("expireDate") as YYYYMMDD;
     this.expireTime = formData.get("expireTime") as HHMM;
     this.songId = "";
-    // }
   }
 
   public getPlainObject() {
@@ -85,22 +71,20 @@ export class Song extends SongDoc implements uploadable {
     this.photo = formData.get("photo") as File;
   }
   isValidForm() {
-    if (!this.title) return { message: "제목을 입력해주세요." };
-    if (!this.photo) return { message: "이미지를 업로드해주세요." };
-    if (!this.description) return { message: "설명을 입력해주세요." };
+    if (!this.title) return "제목을 입력해주세요.";
+    if (!this.photo) return "이미지를 업로드해주세요.";
+    if (!this.description) return "설명을 입력해주세요.";
     if (!isValidDate(this.expireDate) || !isValidTime(this.expireTime))
-      return { message: "날짜를 올바르게 입력해주세요." };
+      return "날짜를 올바르게 입력해주세요.";
 
-    if (!this.currentPrice || !this.buyPrice)
-      return { message: "가격을 입력해주세요." };
+    if (!this.currentPrice || !this.buyPrice) return "가격을 입력해주세요.";
     if (this.currentPrice === this.buyPrice)
-      return { message: "판매가와 즉시 구매가는 같을 수 없습니다." };
-    if (this.currentPrice < 0)
-      return { message: "가격은 0원 이상이어야 합니다." };
+      return "판매가와 즉시 구매가는 같을 수 없습니다.";
+    if (this.currentPrice < 0) return "가격은 0원 이상이어야 합니다.";
 
-    if (!this.audio) return { message: "음악 파일을 업로드해주세요." };
+    if (!this.audio) return "음악 파일을 업로드해주세요.";
     if (this.genres.length === 0 || this.vibes.length === 0)
-      return { message: "1가지 이상의 장르와 분위기를 선택해주세요." };
+      return "1가지 이상의 장르와 분위기를 선택해주세요.";
     if (
       !(
         this.audio.size < 10000000 &&
@@ -108,9 +92,7 @@ export class Song extends SongDoc implements uploadable {
         ["audio/mp3", "audio/mpeg"].includes(this.audio.type)
       )
     )
-      return {
-        message: " 10MB 이하의 MP3/MPEG파일을 올려주세요.",
-      };
+      return "10MB 이하의 MP3/MPEG파일을 올려주세요.";
 
     if (
       !(
@@ -119,17 +101,14 @@ export class Song extends SongDoc implements uploadable {
         ["image/png", "image/jpg", "image/jpeg"].includes(this.photo.type)
       )
     )
-      return {
-        message: "10MB 이하의 PNG/JPG 파일을 올려주세요.",
-      };
+      return "10MB 이하의 PNG/JPG 파일을 올려주세요.";
     return false;
   }
   public async upload() {
     const errorMsg = this.isValidForm();
     if (errorMsg) return errorMsg;
     const docRef = await this.uploadDoc();
-    if (!docRef)
-      return { message: "데이터 업로드에 실패했습니다. 다시 시도해주세요." };
+    if (!docRef) return "데이터 업로드에 실패했습니다. 다시 시도해주세요.";
     const songErrorMsg = await this.uploadSong(docRef);
     if (songErrorMsg) return songErrorMsg;
     const photoErrorMsg = await this.uploadPhoto(docRef);
@@ -156,9 +135,7 @@ export class Song extends SongDoc implements uploadable {
     } catch (error) {
       console.log(error);
       if (docRef) await docRef.delete();
-      return {
-        message: "음악 업로드에 실패했습니다. 다시 시도해주세요.",
-      };
+      return "음악 업로드에 실패했습니다. 다시 시도해주세요.";
     }
     return false;
   }
@@ -180,9 +157,7 @@ export class Song extends SongDoc implements uploadable {
       return false;
     } catch (error) {
       await docRef.delete();
-      return {
-        message: "이미지 업로드에 실패했습니다. 다시 시도해주세요.",
-      };
+      return "이미지 업로드에 실패했습니다. 다시 시도해주세요.";
     }
   }
 }

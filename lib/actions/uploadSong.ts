@@ -17,7 +17,7 @@ export default async function onUploadSong(
     return { message: "잘못된 접근입니다." };
   const song = new Song(formData);
   const errorMsg = await song.upload();
-  if (errorMsg) return errorMsg;
+  if (errorMsg) return { message: errorMsg };
   else {
     redirect("/mypage");
   }
