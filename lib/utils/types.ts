@@ -31,37 +31,21 @@ export interface ArtistForm {
   description: string;
   photoURL?: string;
 }
-export class Song {
-  // private songId: string,
-  constructor(
-    public title: string,
-    public audioURL: string,
-    public photoURL: string,
-
-    public description: string,
-    public uid: string,
-    public length: Length,
-    public genres: Genre[],
-    public vibes: Vibe[],
-    public currentPrice: number,
-    public buyPrice: number,
-    public expireDate: YYYYMMDD,
-    public expireTime: HHMM
-  ) {
-    this.uid = uid;
-    this.title = title;
-    this.genres = genres;
-    this.vibes = vibes;
-    this.description = description;
-    this.audioURL = audioURL;
-    this.photoURL = photoURL;
-    this.length = length;
-    this.expireDate = expireDate;
-    this.currentPrice = currentPrice;
-    this.buyPrice = buyPrice;
-    this.expireTime = expireTime;
-  }
-}
+export type SongType = {
+  title: string;
+  audioURL: string;
+  photoURL: string;
+  description: string;
+  songId: string;
+  uid: string;
+  length: Length;
+  genres: Genre[];
+  vibes: Vibe[];
+  currentPrice: number;
+  buyPrice: number;
+  expireDate: YYYYMMDD;
+  expireTime: HHMM;
+};
 export type Position = (typeof Positions)[number];
 export type Genre = (typeof Genres)[number];
 export type Vibe = (typeof Vibes)[number];

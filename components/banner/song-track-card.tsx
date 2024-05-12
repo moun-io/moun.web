@@ -1,5 +1,5 @@
 import React from "react";
-import { Song } from "@/lib/utils/types";
+import { Song } from "@/lib/class/song-client";
 import Image from "next/image";
 import Link from "next/link";
 import { isValidUrl } from "@/lib/utils/isValid";
@@ -8,56 +8,40 @@ import WaveForm from "@/components/banner/waveform";
 import { twMerge } from "tailwind-merge";
 export default function SongTrackCard({
   index,
-  audioURL,
-  songId,
-  title,
-  uid,
-  photoURL,
-  length,
-  genres,
-  currentPrice,
-  buyPrice,
-  expireDate,
+  song,
   play,
   setPlay,
-}: Song & {
+}: {
+  song: Song;
   index: number;
-  songId: string;
   play: string | null;
   setPlay: any;
 }) {
-  const endDate = new Date(expireDate);
-  const startDate = new Date();
-
-  const diff = endDate.getTime() - startDate.getTime();
-  const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-
   const onPlay = () => {
     console.log(play);
-    if (play === songId) {
+    if (play === song.songId) {
       setPlay(null);
       console.log(null);
-
       return;
     } else {
-      setPlay(songId);
+      setPlay(song.songId);
     }
   };
   return (
     <ol className="flex items-center my-8 hover:bg-gray-100">
       <li className="p-4 flex-none">{index + 1}</li>
       <li className="p-4 flex-none flex items-center gap-4">
-        {isValidUrl(photoURL) ? (
+        {isValidUrl(song.photoURL) ? (
           <div className="Center group" onClick={onPlay}>
             <Image
-              src={photoURL}
+              src={song.photoURL}
               width={280}
               height={280}
               alt="no image"
               className=" aspect-square rounded-2xl size-24 object-fit cursor-pointer"
             />
             <div className="absolute cursor-pointer">
-              {play === songId ? (
+              {play === song.songId ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -89,12 +73,12 @@ export default function SongTrackCard({
         ) : (
           "no image"
         )}
-        <Link href={"/song/" + songId} className="">
+        <Link href={"/song/" + song.songId} className="">
           <figcaption className="flex flex-col justify-between py-4">
-            <h2 className="font-semibold text-xl">{title}</h2>
-            <div className="text-sm text-neutral-400">{uid}</div>
+            <h2 className="font-semibold text-xl">{song.title}</h2>
+            <div className="text-sm text-neutral-400">{song.uid}</div>
             <div className="mt-4 text-xs text-neutral-400">
-              {genres.map((g, i) => (
+              {song.genres.map((g, i) => (
                 <span key={i} className="mr-2">
                   #{g}{" "}
                 </span>
@@ -106,20 +90,20 @@ export default function SongTrackCard({
       <li className="flex-auto hidden md:flex gap-8 items-center mx-8">
         <div>{length}</div>
         <div className="w-full">
-          {audioURL && (
+          {song.audioURL && (
             <WaveForm
-              url={audioURL}
+              url={song.audioURL}
               play={play}
-              songId={songId}
+              songId={song.songId}
               setPlay={setPlay}
             ></WaveForm>
           )}
         </div>
       </li>
       <li className="flex-auto">
-        $ {currentPrice} / $ {buyPrice}
+        $ {song.currentPrice} / $ {song.buyPrice}
       </li>
-      <li className="flex-none hidden sm:block">D-{diffDays}</li>
+      <li className="flex-none hidden sm:block">D-{song.getDateDiff()}</li>
     </ol>
   );
 }

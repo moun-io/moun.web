@@ -6,7 +6,22 @@ import { getDownloadURL } from "firebase-admin/storage";
 import { isValidDate, isValidTime } from "../utils/isValid";
 import { uploadable } from "../class/interface";
 import { doc } from "firebase/firestore";
-export class SongDoc {
+export type SongType = {
+  title: string;
+  audioURL: string;
+  photoURL: string;
+  description: string;
+  songId: string;
+  uid: string;
+  length: Length;
+  genres: Genre[];
+  vibes: Vibe[];
+  currentPrice: number;
+  buyPrice: number;
+  expireDate: YYYYMMDD;
+  expireTime: HHMM;
+};
+export class SongDoc implements SongType {
   title: string;
   audioURL: string;
   photoURL: string;
@@ -22,6 +37,7 @@ export class SongDoc {
   expireTime: HHMM;
 
   constructor(formData: FormData) {
+    // if (formData) {
     const selectedGenres = ArrayFilter(Genres, formData) as Genre[];
     const selectedVibes = ArrayFilter(Vibes, formData) as Vibe[];
     this.audioURL = "";
@@ -42,9 +58,12 @@ export class SongDoc {
     this.expireDate = formData.get("expireDate") as YYYYMMDD;
     this.expireTime = formData.get("expireTime") as HHMM;
     this.songId = "";
+    // }
   }
-  getPlainObject() {
+
+  public getPlainObject() {
     return {
+      songId: this.songId,
       title: this.title,
       audioURL: this.audioURL,
       photoURL: this.photoURL,
@@ -59,7 +78,7 @@ export class SongDoc {
       expireTime: this.expireTime,
     };
   }
-  protected async uploadDoc() {
+  private async uploadDoc() {
     try {
       const docRef = await db.collection("songs").add(this.getPlainObject());
       await docRef.update({ songId: docRef.id }); //songId를 docId로 설정

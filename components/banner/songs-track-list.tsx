@@ -6,6 +6,7 @@ import {
   getDocs,
   limit,
   startAfter,
+  doc,
 } from "firebase/firestore";
 
 import SortButton from "./sort-button";
@@ -13,12 +14,12 @@ import { Genres } from "@/lib/utils/const";
 import Spinner from "./spinner";
 import { useInView } from "react-intersection-observer";
 import SongTrackCard from "./song-track-card";
-import { Song } from "@/lib/utils/types";
-// improt {Song} from "@/lib/
+import { Song } from "@/lib/class/song-client";
 
 import { db } from "@/lib/firebase/client";
 
 import { useCallback, useEffect, useState } from "react";
+// import { Song } from "@/lib/utils/types";
 
 export default function SongsList() {
   const [genre, setGenre] = useState<string | null>(null);
@@ -26,9 +27,7 @@ export default function SongsList() {
   const [ref, inView] = useInView({ threshold: 0 });
   const [page, setPage] = useState<any>();
   const [play, setPlay] = useState<string | null>(null);
-
-  const [songs, setSongs] = useState<(Song & { songId: string })[]>([]);
-
+  const [songs, setSongs] = useState<Song[]>([]);
   const fetchSongs = useCallback(async () => {
     if (end) {
       console.log("end");
@@ -49,16 +48,8 @@ export default function SongsList() {
 
       if (!querySnapshot.empty) {
         //데이터가 있을때
-
-        const newSongs = querySnapshot.docs.map((doc) => ({
-          songId: doc.id,
-
-          ...(doc.data() as Song),
-        }));
-
+        const newSongs = querySnapshot.docs.map((doc) => new Song(doc.data()));
         setPage(querySnapshot.docs[querySnapshot.docs.length - 1]); //마지막 데이터 저장
-        console.log("fetching");
-
         setSongs((prev) => [...(prev ?? []), ...newSongs]); //데이터 추가
       } else {
         //데이터가 없을때
@@ -98,7 +89,7 @@ export default function SongsList() {
           <SongTrackCard
             key={index}
             index={index}
-            {...song}
+            song={song}
             play={play}
             setPlay={setPlay}
           />
