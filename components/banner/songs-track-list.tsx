@@ -19,7 +19,7 @@ import { Song } from "@/lib/class/song-client";
 import { db } from "@/lib/firebase/client";
 
 import { useCallback, useEffect, useState } from "react";
-// import { Song } from "@/lib/utils/types";
+
 
 export default function SongsList() {
   const [genre, setGenre] = useState<string | null>(null);
@@ -28,6 +28,7 @@ export default function SongsList() {
   const [page, setPage] = useState<any>();
   const [play, setPlay] = useState<string | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);
+  
   const fetchSongs = useCallback(async () => {
     if (end) {
       console.log("end");
@@ -36,7 +37,7 @@ export default function SongsList() {
 
     try {
       const songsRef = collection(db, "songs");
-      const artistsRef = collection(db, "artists");
+      // const artistsRef = collection(db, "artists");
       const constraints = [
         where("audioURL", "!=", false),
         limit(5),
