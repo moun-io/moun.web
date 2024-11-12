@@ -9,6 +9,8 @@ import Image from "next/image";
 
 import { useUser } from "@/lib/context/authProvider";
 import Profile from "../svg/profile";
+
+
 export default function Header({ children }: { children: React.ReactNode }) {
   const [isOpened, setIsOpened] = useState(false);
   const Links = ["", "Songs", "Artists", "Released"] as const;

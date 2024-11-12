@@ -2,12 +2,9 @@ import { Position } from "../utils/types";
 import { Positions } from "../utils/const";
 import ArrayFilter from "../utils/array-filter";
 import { db, storage } from "../firebase/server";
-import { redirect } from "next/navigation";
 import { getDownloadURL } from "firebase-admin/storage";
 import { isValidUrl } from "@/lib/utils/isValid";
-import { ArtistForm } from "@/lib/utils/types";
 
-import { verifyId } from "@/lib/actions/verify-id";
 // export class Artist{
 //   public displayName: string;
 //   public positions: Position[];

@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ImageSlider slides={slides} />
       </div>
       <div className="Box Center flex-col py-16 px-8 md:px-4 lg:px-0">
-        {children}
+        {/* {children} */}
       </div>
     </div>
   );

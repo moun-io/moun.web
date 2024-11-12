@@ -1,4 +1,4 @@
-import { User } from "firebase/auth";
+import { User } from "../../../lib/class/User";
 
 export function Box({
   children,

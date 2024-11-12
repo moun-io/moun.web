@@ -33,8 +33,6 @@ yarn-error.log*
 .vercel
 #firebase
 /.firebase/
-firestore.rules
-firestore.indexes.json
 # moun-service-account.json
 firebase-debug.log
 

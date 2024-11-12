@@ -26,7 +26,9 @@ export default async function RootLayout({
           {modal}
           <AuthProvider>
             <Header>
-              <main className="flex flex-col mt-[4.5rem]">{children}</main>
+              <main className="flex flex-col mt-[4.5rem]">
+                {children}
+              </main>
             </Header>
             <Footer />
           </AuthProvider>
