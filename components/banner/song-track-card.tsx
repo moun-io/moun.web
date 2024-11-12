@@ -1,4 +1,4 @@
-import React from "react";
+import React,{Suspense} from "react";
 import { Song } from "@/lib/class/song-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,6 +88,7 @@ export default function SongTrackCard({
       </li>
       <li className="flex-auto hidden md:flex gap-8 items-center mx-8">
         <div>{length}</div>
+
         <div className="w-full">
           {song.audioURL && (
             <WaveForm
@@ -97,7 +98,10 @@ export default function SongTrackCard({
               setPlay={setPlay}
             ></WaveForm>
           )}
+
         </div>
+
+      
       </li>
       <li className="flex-auto">
         $ {song.currentPrice} / $ {song.buyPrice}

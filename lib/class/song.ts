@@ -137,27 +137,27 @@ export class Song extends SongDoc implements uploadable {
       if (docRef) await docRef.delete();
       return "음악 업로드에 실패했습니다. 다시 시도해주세요.";
     }
-    return false;
   }
   private async uploadPhoto(docRef: FirebaseFirestore.DocumentReference) {
     const photoBuffer = await this.photo.arrayBuffer();
     try {
-      const fileRef = await storage
+      const photoFileRef = await storage
         .bucket("moun-df9ff.appspot.com")
         .file(`songs/${docRef.id}/album`);
-      // console.log("fileRef", fileRef);
-      await fileRef.save(Buffer.from(photoBuffer), {
+      await photoFileRef.save(Buffer.from(photoBuffer), {
         contentType: this.photo.type,
         metadata: {
           cacheControl: "public, max-age=31536000",
         },
       });
-      const photoURL = await getDownloadURL(fileRef);
+      const photoURL = await getDownloadURL(photoFileRef);
       await docRef.update({ photoURL });
       return false;
     } catch (error) {
-      await docRef.delete();
+      if (docRef) await docRef.delete();
       return "이미지 업로드에 실패했습니다. 다시 시도해주세요.";
     }
-  }
+}
+  
+  
 }
